@@ -1191,3 +1191,12 @@
     transition-duration: .01ms !important;
   }
 }
+
+.sidebar-link--disabled {
+  cursor: default;
+}
+
+.sidebar-link--disabled:hover {
+  color: #33343a;
+  background: transparent;
+}

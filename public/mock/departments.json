@@ -1,0 +1,22 @@
+[
+  {
+    "id_departemen": 1,
+    "nama_departemen": "General"
+  },
+  {
+    "id_departemen": 2,
+    "nama_departemen": "Marketing"
+  },
+  {
+    "id_departemen": 3,
+    "nama_departemen": "Creative"
+  },
+  {
+    "id_departemen": 4,
+    "nama_departemen": "Teknis Lapangan"
+  },
+  {
+    "id_departemen": 5,
+    "nama_departemen": "Administrasi"
+  }
+]
