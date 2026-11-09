@@ -17,6 +17,7 @@ import notificationIcon from './assets/notif.png'
 import calendarIcon from './assets/date.png'
 import meetIcon from './assets/logos_google-meet.png'
 import TrackingPage from './TrackingPage.jsx'
+import PayrollPage from './PayrollPage.jsx'
 
 const navigation = [
   { label: 'Dashboard', icon: dashboardIcon },
@@ -376,9 +377,11 @@ function App() {
   }, [])
 
   useEffect(() => {
-    document.title = activePage === 'tracking-lokasi'
-      ? 'Tracking Lokasi | Tinta Inspirasi Indonesia'
-      : 'Dashboard | Tinta Inspirasi Indonesia'
+    const pageTitles = {
+      'tracking-lokasi': 'Tracking Lokasi',
+      penggajian: 'Penggajian',
+    }
+    document.title = `${pageTitles[activePage] || 'Dashboard'} | Tinta Inspirasi Indonesia`
   }, [activePage])
 
   useEffect(() => {
@@ -415,9 +418,10 @@ function App() {
         <nav className="sidebar-nav">
           {navigation.map((item, index) => {
             const href = index === 0 ? '#dashboard' : `#${item.label.toLowerCase().replaceAll(' ', '-')}`
-            const isActive = item.label === 'Tracking Lokasi'
-              ? activePage === 'tracking-lokasi'
-              : item.label === 'Dashboard' && activePage !== 'tracking-lokasi'
+            const pageKey = item.label.toLowerCase().replaceAll(' ', '-')
+            const isActive = item.label === 'Dashboard'
+              ? !['tracking-lokasi', 'penggajian'].includes(activePage)
+              : activePage === pageKey
             return (
               <a
                 key={item.label}
@@ -460,6 +464,11 @@ function App() {
                 <h1>Tracking Lokasi</h1>
                 <p>Pantau lokasi dan pergerakan karyawan secara real-time</p>
               </>
+            ) : activePage === 'penggajian' ? (
+              <>
+                <h1>Penggajian</h1>
+                <p>Kelola data gaji karyawan</p>
+              </>
             ) : (
               <>
                 <h1>Selamat Pagi, {dashboard?.profile.name || '...' } <span aria-hidden="true">👋</span></h1>
@@ -479,6 +488,8 @@ function App() {
 
         {activePage === 'tracking-lokasi' ? (
           <TrackingPage />
+        ) : activePage === 'penggajian' ? (
+          <PayrollPage />
         ) : error ? (
           <section className="request-state request-state--error" role="alert">
             <h2>Dashboard belum dapat dimuat</h2>
