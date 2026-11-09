@@ -1,5 +1,10 @@
 {
   "periods": ["Juni 2026", "Mei 2026", "April 2026"],
+  "summaryTrends": {
+    "totalPayroll": { "percentage": 18.2, "description": "dari bulan lalu" },
+    "employeeCount": { "percentage": 4.3, "description": "Aktif menerima gaji" },
+    "averageSalary": { "percentage": 25.6, "description": "Per karyawan" }
+  },
   "currentEmployeeId": 3,
   "currentEmployeeStatus": "Siap Diambil",
   "employees": [
