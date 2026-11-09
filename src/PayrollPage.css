@@ -60,11 +60,17 @@
 }
 
 .payroll-metric {
-  min-height: 132px;
-  display: flex;
-  align-items: flex-start;
+  min-height: 166px;
+  display: grid;
+  align-content: space-between;
   gap: 13px;
-  padding: 18px;
+  padding: 18px 20px;
+}
+
+.payroll-metric__heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
 .payroll-metric__icon {
@@ -90,13 +96,13 @@
 .payroll-metric__body {
   min-width: 0;
   display: grid;
-  gap: 7px;
+  gap: 12px;
 }
 
-.payroll-metric__body h2 {
+.payroll-metric__heading h2 {
   margin: 0;
   color: #555860;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   line-height: 1.4;
 }
@@ -104,31 +110,52 @@
 .payroll-metric__body > strong {
   overflow-wrap: anywhere;
   color: #25272c;
-  font-size: clamp(16px, 1.3vw, 20px);
+  font-size: clamp(18px, 1.45vw, 21px);
   font-weight: 650;
   line-height: 1.35;
 }
 
+.payroll-metric__trend {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.payroll-metric__growth {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #ecebff;
+  color: #4033ff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.payroll-metric__growth > span {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+}
+
 .payroll-metric__note {
-  color: #858992;
+  color: #555860;
   font-size: 12px;
   line-height: 1.45;
 }
 
-.payroll-metric--green .payroll-metric__note { color: #179353; }
-.payroll-metric--purple .payroll-metric__note { color: #a22bd7; }
-
-.payroll-skeleton {
-  width: min(100%, 170px);
-  height: 25px;
-  border-radius: 6px;
-  background: linear-gradient(90deg, #f0f1f4, #fafafa, #f0f1f4);
-  background-size: 200% 100%;
-  animation: payroll-shimmer 1.4s infinite linear;
+.payroll-metric--green .payroll-metric__growth {
+  background: #e1ffed;
+  color: #0c9d4c;
 }
 
-@keyframes payroll-shimmer {
-  to { background-position: -200% 0; }
+.payroll-metric--purple .payroll-metric__growth {
+  background: #f9eaff;
+  color: #bd24eb;
 }
 
 .payroll-metric__body--progress {
@@ -159,6 +186,24 @@
   border-radius: inherit;
   background: #ffa114;
   transition: width 180ms ease;
+}
+
+.payroll-skeleton {
+  width: min(100%, 170px);
+  height: 25px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #f0f1f4, #fafafa, #f0f1f4);
+  background-size: 200% 100%;
+  animation: payroll-shimmer 1.4s infinite linear;
+}
+
+@keyframes payroll-shimmer {
+  to { background-position: -200% 0; }
+}
+
+.payroll-skeleton--trend {
+  width: 145px;
+  height: 27px;
 }
 
 .payroll-content-grid {
@@ -743,8 +788,8 @@
   }
 
   .payroll-metric {
-    min-height: 122px;
-    gap: 9px;
+    min-height: 150px;
+    gap: 12px;
     padding: 12px;
   }
 
@@ -763,7 +808,11 @@
     gap: 6px;
   }
 
-  .payroll-metric__body h2 {
+  .payroll-metric__heading {
+    gap: 9px;
+  }
+
+  .payroll-metric__heading h2 {
     font-size: 12px;
   }
 
@@ -771,8 +820,23 @@
     font-size: 15px;
   }
 
-  .payroll-metric__note {
+  .payroll-metric__trend {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .payroll-metric__growth {
+    padding: 2px 7px;
     font-size: 11px;
+  }
+
+  .payroll-metric__growth > span {
+    font-size: 13px;
+  }
+
+  .payroll-metric__note {
+    font-size: 10px;
   }
 
   .payroll-list-panel,
@@ -844,6 +908,10 @@
 @media (prefers-reduced-motion: reduce) {
   .payroll-skeleton {
     animation: none;
+  }
+
+  .payroll-progress > span {
+    transition: none;
   }
 
   .payroll-progress > span {

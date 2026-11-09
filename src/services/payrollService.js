@@ -20,8 +20,18 @@ export async function fetchPayrollData() {
     || payroll.periods.length === 0
     || !Array.isArray(payroll.employees)
     || !Array.isArray(payroll.activities)
+    || !payroll.summaryTrends
   ) {
     throw new Error('Format data penggajian tidak valid.')
+  }
+  const requiredTrends = ['totalPayroll', 'employeeCount', 'averageSalary']
+  const invalidTrend = requiredTrends.find((key) => (
+    !Number.isFinite(payroll.summaryTrends[key]?.percentage)
+    || typeof payroll.summaryTrends[key]?.description !== 'string'
+    || !payroll.summaryTrends[key].description.trim()
+  ))
+  if (invalidTrend) {
+    throw new Error('Data tren ringkasan penggajian tidak valid.')
   }
 
   const employeesById = Object.fromEntries(employees.map((employee) => [employee.id, employee]))

@@ -152,9 +152,9 @@ function PayrollPage() {
   }
 
   const metrics = [
-    { label: 'Total Payroll', value: formatCurrency(totalPayroll), note: `${completion}% selesai`, icon: walletIcon, color: 'blue' },
-    { label: 'Total Karyawan', value: String(periodPayments.length), note: 'Karyawan pada periode ini', icon: employeesIcon, color: 'green' },
-    { label: 'Rata-rata Gaji', value: formatCurrency(averageSalary), note: 'Per karyawan', icon: averageIcon, color: 'purple' },
+    { label: 'Total Payroll', value: formatCurrency(totalPayroll), trend: payroll?.summaryTrends?.totalPayroll, icon: walletIcon, color: 'blue' },
+    { label: 'Total Karyawan', value: String(periodPayments.length), trend: payroll?.summaryTrends?.employeeCount, icon: employeesIcon, color: 'green' },
+    { label: 'Rata-rata Gaji', value: formatCurrency(averageSalary), trend: payroll?.summaryTrends?.averageSalary, icon: averageIcon, color: 'purple' },
   ]
 
   return (
@@ -170,21 +170,43 @@ function PayrollPage() {
           <section className="payroll-metrics" aria-label="Ringkasan penggajian">
             {metrics.map((metric) => (
               <article className={`payroll-metric payroll-metric--${metric.color}`} key={metric.label}>
-                <span className="payroll-metric__icon" aria-hidden="true"><img src={metric.icon} alt="" /></span>
-                <div className="payroll-metric__body">
+                <div className="payroll-metric__heading">
+                  <span className="payroll-metric__icon" aria-hidden="true"><img src={metric.icon} alt="" /></span>
                   <h2>{metric.label}</h2>
+                </div>
+                <div className="payroll-metric__body">
                   {loading ? <span className="payroll-skeleton" /> : <strong>{metric.value}</strong>}
-                  <span className="payroll-metric__note">{metric.note}</span>
+                  <div className="payroll-metric__trend">
+                    {loading ? <span className="payroll-skeleton payroll-skeleton--trend" /> : (
+                      <>
+                        <span className="payroll-metric__growth" aria-label={`Naik ${metric.trend?.percentage}%`}>
+                          <span aria-hidden="true">↑</span> {metric.trend?.percentage}%
+                        </span>
+                        <span className="payroll-metric__note">{metric.trend?.description}</span>
+                      </>
+                    )}
+                  </div>
                 </div>
               </article>
             ))}
             <article className="payroll-metric payroll-metric--orange">
-              <span className="payroll-metric__icon" aria-hidden="true"><img src={paymentStatusIcon} alt="" /></span>
-              <div className="payroll-metric__body payroll-metric__body--progress">
+              <div className="payroll-metric__heading">
+                <span className="payroll-metric__icon" aria-hidden="true"><img src={paymentStatusIcon} alt="" /></span>
                 <h2>Status Penggajian</h2>
-                <strong>{loading ? 'Memuat...' : completion === 100 ? 'Selesai' : 'Diproses'}</strong>
-                <span className="payroll-progress__label">{loading ? '–' : `${completion}% Selesai`}</span>
-                <span className="payroll-progress" role="progressbar" aria-label="Progres penggajian" aria-valuenow={completion} aria-valuemin="0" aria-valuemax="100">
+              </div>
+              <div className="payroll-metric__body payroll-metric__body--progress">
+                {loading ? <span className="payroll-skeleton" /> : (
+                  <strong>{completion === 100 ? 'Selesai' : 'Diproses'}</strong>
+                )}
+                <span className="payroll-progress__label">{loading ? 'Memuat progres...' : `${completion}% Selesai`}</span>
+                <span
+                  className="payroll-progress"
+                  role="progressbar"
+                  aria-label="Progres penggajian"
+                  aria-valuenow={completion}
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >
                   <span style={{ width: `${completion}%` }} />
                 </span>
               </div>
