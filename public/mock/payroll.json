@@ -1,0 +1,33 @@
+{
+  "periods": ["Juni 2026", "Mei 2026", "April 2026"],
+  "currentEmployeeId": 3,
+  "currentEmployeeStatus": "Siap Diambil",
+  "employees": [
+    { "employeeId": 1, "division": "Divisi A", "period": "Juni 2026", "nominal": 8000000, "status": "Diproses", "paidAt": null },
+    { "employeeId": 2, "division": "Divisi A", "period": "Juni 2026", "nominal": 8000000, "status": "Diproses", "paidAt": null },
+    { "employeeId": 3, "division": "Divisi A", "period": "Juni 2026", "nominal": 8000000, "status": "Siap Diambil", "paidAt": null },
+    { "employeeId": 4, "division": "Divisi B", "period": "Juni 2026", "nominal": 9200000, "status": "Diproses", "paidAt": null },
+    { "employeeId": 5, "division": "Divisi B", "period": "Juni 2026", "nominal": 8700000, "status": "Selesai", "paidAt": "30 Juni 2026" },
+    { "employeeId": 6, "division": "Divisi B", "period": "Juni 2026", "nominal": 8500000, "status": "Diproses", "paidAt": null },
+    { "employeeId": 1, "division": "Divisi A", "period": "Mei 2026", "nominal": 8000000, "status": "Selesai", "paidAt": "31 Mei 2026" },
+    { "employeeId": 2, "division": "Divisi A", "period": "Mei 2026", "nominal": 8000000, "status": "Selesai", "paidAt": "31 Mei 2026" },
+    { "employeeId": 3, "division": "Divisi A", "period": "Mei 2026", "nominal": 8000000, "status": "Selesai", "paidAt": "31 Mei 2026" },
+    { "employeeId": 4, "division": "Divisi B", "period": "Mei 2026", "nominal": 9200000, "status": "Selesai", "paidAt": "31 Mei 2026" },
+    { "employeeId": 5, "division": "Divisi B", "period": "Mei 2026", "nominal": 8700000, "status": "Selesai", "paidAt": "31 Mei 2026" },
+    { "employeeId": 6, "division": "Divisi B", "period": "Mei 2026", "nominal": 8500000, "status": "Selesai", "paidAt": "31 Mei 2026" },
+    { "employeeId": 1, "division": "Divisi A", "period": "April 2026", "nominal": 8000000, "status": "Selesai", "paidAt": "30 April 2026" },
+    { "employeeId": 2, "division": "Divisi A", "period": "April 2026", "nominal": 8000000, "status": "Selesai", "paidAt": "30 April 2026" },
+    { "employeeId": 3, "division": "Divisi A", "period": "April 2026", "nominal": 8000000, "status": "Selesai", "paidAt": "30 April 2026" },
+    { "employeeId": 4, "division": "Divisi B", "period": "April 2026", "nominal": 9200000, "status": "Selesai", "paidAt": "30 April 2026" },
+    { "employeeId": 5, "division": "Divisi B", "period": "April 2026", "nominal": 8700000, "status": "Selesai", "paidAt": "30 April 2026" },
+    { "employeeId": 6, "division": "Divisi B", "period": "April 2026", "nominal": 8500000, "status": "Selesai", "paidAt": "30 April 2026" }
+  ],
+  "activities": [
+    { "id": 1, "title": "Penggajian periode Mei 2026 telah diselesaikan", "actor": "Adhi Puspito", "date": "25 Mei 2026", "time": "14:32" },
+    { "id": 2, "title": "Proses penggajian periode Juni 2026 dimulai", "actor": "Adhi Puspito", "date": "25 Juni 2026", "time": "09:15" },
+    { "id": 3, "title": "Data gaji 5 karyawan diperbarui hari ini", "actor": "Adhi Puspito", "date": "25 Juni 2026", "time": "16:15" },
+    { "id": 4, "title": "Data gaji 7 karyawan diperbarui hari ini", "actor": "Adhi Puspito", "date": "26 Juni 2026", "time": "16:32" },
+    { "id": 5, "title": "Slip gaji periode Juni tersedia untuk ditinjau", "actor": "Adhi Puspito", "date": "27 Juni 2026", "time": "10:20" },
+    { "id": 6, "title": "Pembayaran gaji Divisi A mulai diproses", "actor": "Adhi Puspito", "date": "27 Juni 2026", "time": "13:45" }
+  ]
+}
