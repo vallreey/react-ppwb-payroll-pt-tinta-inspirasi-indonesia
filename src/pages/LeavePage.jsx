@@ -149,8 +149,6 @@ function LeaveDetailDialog({
 
         <div className="space-y-6 px-6 py-5">
 
-          {/* Identitas Karyawan */}
-
           <div className="flex items-center gap-3">
             <Avatar
               name={employee?.nama_lengkap ?? 'Karyawan'}
@@ -171,8 +169,6 @@ function LeaveDetailDialog({
               </p>
             </div>
           </div>
-
-          {/* Informasi Pengajuan */}
 
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
 
@@ -217,8 +213,6 @@ function LeaveDetailDialog({
 
           </div>
 
-          {/* Deskripsi */}
-
           <div>
             <p className="text-xs text-gray-400">
               Deskripsi
@@ -245,8 +239,6 @@ function LeaveDetailDialog({
             )}
           </div>
 
-          {/* Alasan Penolakan */}
-
           {request.rejection_reason && (
             <div className="rounded-xl border border-red-100 bg-red-50 p-3">
               <p className="text-xs font-semibold text-red-700">
@@ -258,8 +250,6 @@ function LeaveDetailDialog({
               </p>
             </div>
           )}
-
-          {/* Lampiran */}
 
           <div>
             <p className="mb-2 text-xs text-gray-400">
@@ -301,8 +291,6 @@ function LeaveDetailDialog({
           </div>
 
         </div>
-
-        {/* Tombol Aksi */}
 
         <div className="flex flex-col-reverse gap-2 border-t border-gray-200 px-6 py-4 sm:flex-row sm:justify-end">
 

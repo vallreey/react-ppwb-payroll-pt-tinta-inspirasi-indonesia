@@ -20,6 +20,7 @@ const UserApprovalsPage = lazy(() => import("./pages/UserApprovalsPage"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const LeavePage = lazy(() => import("./pages/LeavePage"));
+const LeaveRequestPage = lazy(() => import("./pages/LeaveRequestPage"));
 
 const MANAGERS = ["super_admin", "hrd", "supervisor", "direktur"];
 const LEAVE_MANAGERS = ["super_admin", "hrd"];
@@ -82,6 +83,17 @@ export default function App() {
 
             <Route element={<ProtectedRoute roles={LEAVE_MANAGERS} />}>
               <Route path="/izin-cuti" element={<LeavePage />} />
+            </Route>
+
+            <Route
+              element={
+                <ProtectedRoute roles={["karyawan", "supervisor", "hrd"]} />
+              }
+            >
+              <Route
+                path="/pengajuan-izin-cuti"
+                element={<LeaveRequestPage />}
+              />
             </Route>
 
             <Route element={<ProtectedRoute roles={["super_admin"]} />}>
