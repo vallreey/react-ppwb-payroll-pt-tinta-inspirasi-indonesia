@@ -18,7 +18,7 @@ Aplikasi web React untuk dashboard dan pemantauan lokasi karyawan.
    npm install
    ```
 
-3. Jalankan server pengembangan:
+3. Jalankan server lokal:
 
    ```sh
    npm run dev
