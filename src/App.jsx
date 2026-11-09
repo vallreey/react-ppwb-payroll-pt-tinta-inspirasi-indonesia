@@ -16,6 +16,7 @@ import settingsIcon from './assets/settings.png'
 import notificationIcon from './assets/notif.png'
 import calendarIcon from './assets/date.png'
 import meetIcon from './assets/logos_google-meet.png'
+import TrackingPage from './TrackingPage.jsx'
 
 const navigation = [
   { label: 'Dashboard', icon: dashboardIcon },
@@ -316,6 +317,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('announcements')
   const [dialogOpen, setDialogOpen] = useState(false)
   const [localAnnouncements, setLocalAnnouncements] = useState([])
+  const [activePage, setActivePage] = useState(() => window.location.hash.slice(1) || 'dashboard')
 
   async function fetchDashboard() {
     const [dashboardResponse, employeesResponse] = await Promise.all([
@@ -368,6 +370,18 @@ function App() {
   }, [])
 
   useEffect(() => {
+    const updatePage = () => setActivePage(window.location.hash.slice(1) || 'dashboard')
+    window.addEventListener('hashchange', updatePage)
+    return () => window.removeEventListener('hashchange', updatePage)
+  }, [])
+
+  useEffect(() => {
+    document.title = activePage === 'tracking-lokasi'
+      ? 'Tracking Lokasi | Tinta Inspirasi Indonesia'
+      : 'Dashboard | Tinta Inspirasi Indonesia'
+  }, [activePage])
+
+  useEffect(() => {
     const breakpoint = window.matchMedia('(max-width: 760px)')
     const updateBreakpoint = (event) => setIsMobile(event.matches)
     breakpoint.addEventListener('change', updateBreakpoint)
@@ -399,19 +413,25 @@ function App() {
           <img src={companyLogo} alt="PT. Tinta Inspirasi Indonesia" />
         </a>
         <nav className="sidebar-nav">
-          {navigation.map((item, index) => (
-            <a
-              key={item.label}
-              href={index === 0 ? '#dashboard' : `#${item.label.toLowerCase().replaceAll(' ', '-')}`}
-              className={`sidebar-link ${index === 0 ? 'sidebar-link--active' : ''}`}
-              aria-current={index === 0 ? 'page' : undefined}
-              onClick={closeMobileSidebar}
-              title={!sidebarOpen ? item.label : undefined}
-            >
-              <img src={item.icon} alt="" />
-              <span>{item.label}</span>
-            </a>
-          ))}
+          {navigation.map((item, index) => {
+            const href = index === 0 ? '#dashboard' : `#${item.label.toLowerCase().replaceAll(' ', '-')}`
+            const isActive = item.label === 'Tracking Lokasi'
+              ? activePage === 'tracking-lokasi'
+              : item.label === 'Dashboard' && activePage !== 'tracking-lokasi'
+            return (
+              <a
+                key={item.label}
+                href={href}
+                className={`sidebar-link ${isActive ? 'sidebar-link--active' : ''}`}
+                aria-current={isActive ? 'page' : undefined}
+                onClick={closeMobileSidebar}
+                title={!sidebarOpen ? item.label : undefined}
+              >
+                <img src={item.icon} alt="" />
+                <span>{item.label}</span>
+              </a>
+            )
+          })}
         </nav>
       </aside>
 
@@ -435,8 +455,17 @@ function App() {
             <Icon name="menu" />
           </button>
           <div className="welcome">
-            <h1>Selamat Pagi, {dashboard?.profile.name || '...' } <span aria-hidden="true">👋</span></h1>
-            <p>Hari ini {dashboard?.todayLabel || 'memuat tanggal...'}</p>
+            {activePage === 'tracking-lokasi' ? (
+              <>
+                <h1>Tracking Lokasi</h1>
+                <p>Pantau lokasi dan pergerakan karyawan secara real-time</p>
+              </>
+            ) : (
+              <>
+                <h1>Selamat Pagi, {dashboard?.profile.name || '...' } <span aria-hidden="true">👋</span></h1>
+                <p>Hari ini {dashboard?.todayLabel || 'memuat tanggal...'}</p>
+              </>
+            )}
           </div>
           <div className="topbar-actions">
             <button className="icon-button notification-button" type="button" aria-label="Notifikasi">
@@ -448,7 +477,9 @@ function App() {
           </div>
         </header>
 
-        {error ? (
+        {activePage === 'tracking-lokasi' ? (
+          <TrackingPage />
+        ) : error ? (
           <section className="request-state request-state--error" role="alert">
             <h2>Dashboard belum dapat dimuat</h2>
             <p>{error}</p>
