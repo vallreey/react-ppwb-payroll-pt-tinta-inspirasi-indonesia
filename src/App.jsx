@@ -22,6 +22,7 @@ const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const LeavePage = lazy(() => import("./pages/LeavePage"));
 const LeaveRequestPage = lazy(() => import("./pages/LeaveRequestPage"));
+const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 
 const MANAGERS = ["super_admin", "hrd", "supervisor", "direktur"];
 const LEAVE_MANAGERS = ["super_admin", "hrd"];
@@ -73,6 +74,7 @@ export default function App() {
             <Route path="/absensi" element={<AttendancePage />} />
             <Route path="/absensi/catat" element={<AttendanceRecordPage />} />
             <Route path="/tracking-lokasi" element={<TrackingRoute />} />
+            <Route path="/profil" element={<ProfilePage />} />
 
             <Route element={<ProtectedRoute roles={MANAGERS} />}>
               <Route path="/karyawan" element={<EmployeesPage />} />
