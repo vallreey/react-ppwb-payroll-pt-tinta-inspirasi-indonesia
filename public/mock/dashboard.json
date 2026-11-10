@@ -1,0 +1,97 @@
+{
+  "profile": {
+    "name": "Adhi Puspito"
+  },
+  "todayLabel": "Minggu, 21 Juni 2026.",
+  "metrics": [
+    {
+      "value": "250",
+      "label": "Total karyawan",
+      "trend": "12 more than last quarter",
+      "period": "",
+      "color": "pink"
+    },
+    {
+      "value": "1403",
+      "label": "Total service",
+      "trend": "12% more than last quarter",
+      "period": "",
+      "color": "purple"
+    },
+    {
+      "value": "1297",
+      "label": "Total job",
+      "trend": "12% more than last quarter",
+      "period": "",
+      "color": "blue"
+    },
+    {
+      "value": "10",
+      "label": "Total divisi",
+      "trend": "",
+      "period": "",
+      "color": "green"
+    }
+  ],
+  "attendance": [
+    {
+      "id": 1,
+      "employeeId": 1,
+      "status": "On-Time",
+      "checkIn": "09.00"
+    },
+    {
+      "id": 2,
+      "employeeId": 2,
+      "status": "Late",
+      "checkIn": "09.30"
+    },
+    {
+      "id": 3,
+      "employeeId": 3,
+      "status": "Absent",
+      "checkIn": ""
+    },
+    {
+      "id": 4,
+      "employeeId": 4,
+      "status": "Late",
+      "checkIn": "09.30"
+    },
+    {
+      "id": 5,
+      "employeeId": 5,
+      "status": "On-Time",
+      "checkIn": "08.55"
+    },
+    {
+      "id": 6,
+      "employeeId": 6,
+      "status": "Late",
+      "checkIn": "09.15"
+    }
+  ],
+  "announcements": [],
+  "submissions": [],
+  "tasks": [],
+  "schedules": [
+    {
+      "id": 1,
+      "title": "Interview Kandidat - Customer Service",
+      "type": "Meetings",
+      "dateLabel": "21 Juni, 2026",
+      "time": "08.00 - 10.00",
+      "meetingUrl": "https://meet.google.com/",
+      "attendees": 3
+    },
+    {
+      "id": 2,
+      "title": "Interview Kandidat - Customer Service",
+      "type": "Meetings",
+      "dateLabel": "21 Juni, 2026",
+      "time": "10.30 - 11.30",
+      "meetingUrl": "https://meet.google.com/",
+      "attendees": 3
+    }
+  ]
+}

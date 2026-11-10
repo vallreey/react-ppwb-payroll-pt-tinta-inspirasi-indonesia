@@ -1,0 +1,158 @@
+{
+  "employees": [
+    {
+      "id": 1,
+      "name": "Ageng Saputro",
+      "division": "Divisi A",
+      "location": "Kantor Pusat",
+      "city": "Purwokerto",
+      "status": "On Site",
+      "checkIn": "09.02 WIB",
+      "updatedAt": "1 menit lalu",
+      "lastSeen": "09:52",
+      "activity": "Check-in di Kantor Pusat",
+      "coordinates": [-7.4217, 109.2386],
+      "routeStart": "Area parkir",
+      "routeEnd": "Kantor Pusat",
+      "routeCoordinates": [
+        [-7.423, 109.2363],
+        [-7.4225, 109.2372],
+        [-7.422, 109.2371],
+        [-7.4217, 109.2386]
+      ],
+      "history": [
+        { "time": "09:02", "description": "Check-in di Kantor Pusat" },
+        { "time": "09:18", "description": "Berada di area kantor" },
+        { "time": "09:52", "description": "Lokasi diperbarui" }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Eka Bayu Wiguna",
+      "division": "Divisi A",
+      "location": "Client Site",
+      "city": "Purwokerto",
+      "status": "Client Visit",
+      "checkIn": "09.10 WIB",
+      "updatedAt": "2 menit lalu",
+      "lastSeen": "09:32",
+      "activity": "Menuju Client Site",
+      "coordinates": [-7.4252, 109.2428],
+      "routeStart": "Kantor Pusat",
+      "routeEnd": "Client Site",
+      "routeCoordinates": [
+        [-7.4217, 109.2386],
+        [-7.4225, 109.2401],
+        [-7.4241, 109.241],
+        [-7.4252, 109.2428]
+      ],
+      "history": [
+        { "time": "09:10", "description": "Check-in di Kantor Pusat" },
+        { "time": "09:24", "description": "Memulai perjalanan ke klien" },
+        { "time": "09:32", "description": "Menuju Client Site" }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Cindia Tulis",
+      "division": "Divisi A",
+      "location": "Work From Home",
+      "city": "Purwokerto",
+      "status": "Work From Home",
+      "checkIn": "09.08 WIB",
+      "updatedAt": "4 menit lalu",
+      "lastSeen": "09:08",
+      "activity": "Check-in dari rumah",
+      "coordinates": [-7.4188, 109.2337],
+      "routeStart": "Lingkungan tempat tinggal",
+      "routeEnd": "Work From Home",
+      "routeCoordinates": [
+        [-7.4204, 109.2326],
+        [-7.4198, 109.233],
+        [-7.4192, 109.2329],
+        [-7.4188, 109.2337]
+      ],
+      "history": [
+        { "time": "09:08", "description": "Check-in dari rumah" },
+        { "time": "09:24", "description": "Lokasi diperbarui" }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Fajar Nugraha",
+      "division": "Divisi B",
+      "location": "Kantor Pusat",
+      "city": "Purwokerto",
+      "status": "On Site",
+      "checkIn": "08.56 WIB",
+      "updatedAt": "3 menit lalu",
+      "lastSeen": "09:49",
+      "activity": "Berada di Kantor Pusat",
+      "coordinates": [-7.4196, 109.2452],
+      "routeStart": "Area parkir",
+      "routeEnd": "Kantor Pusat",
+      "routeCoordinates": [
+        [-7.4212, 109.2437],
+        [-7.4206, 109.2441],
+        [-7.4202, 109.2449],
+        [-7.4196, 109.2452]
+      ],
+      "history": [
+        { "time": "08:56", "description": "Check-in di Kantor Pusat" },
+        { "time": "09:21", "description": "Berada di area kantor" },
+        { "time": "09:49", "description": "Lokasi diperbarui" }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Nadia Putri",
+      "division": "Divisi B",
+      "location": "Client Site",
+      "city": "Purwokerto",
+      "status": "Client Visit",
+      "checkIn": "09.16 WIB",
+      "updatedAt": "5 menit lalu",
+      "lastSeen": "09:42",
+      "activity": "Kunjungan ke lokasi klien",
+      "coordinates": [-7.4272, 109.2314],
+      "routeStart": "Kantor Pusat",
+      "routeEnd": "Client Site",
+      "routeCoordinates": [
+        [-7.4217, 109.2386],
+        [-7.423, 109.2368],
+        [-7.4251, 109.2346],
+        [-7.426, 109.233],
+        [-7.4272, 109.2314]
+      ],
+      "history": [
+        { "time": "09:16", "description": "Check-in di Kantor Pusat" },
+        { "time": "09:31", "description": "Memulai perjalanan ke klien" },
+        { "time": "09:42", "description": "Kunjungan ke lokasi klien" }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Dimas Pratama",
+      "division": "Divisi B",
+      "location": "Tidak diketahui",
+      "city": "Purwokerto",
+      "status": "Offline",
+      "checkIn": "–",
+      "updatedAt": "20 menit lalu",
+      "lastSeen": "09:12",
+      "activity": "Lokasi tidak aktif",
+      "coordinates": [-7.4169, 109.2269],
+      "routeStart": "Lokasi terakhir",
+      "routeEnd": "Tidak diketahui",
+      "routeCoordinates": [
+        [-7.4184, 109.2282],
+        [-7.4177, 109.2275],
+        [-7.4169, 109.2269]
+      ],
+      "history": [
+        { "time": "08:52", "description": "Lokasi terakhir diperbarui" },
+        { "time": "09:12", "description": "Perangkat tidak aktif" }
+      ]
+    }
+  ]
+}
