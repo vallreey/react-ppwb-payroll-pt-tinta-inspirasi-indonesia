@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import './PayrollPage.css'
+import PageHeader from './components/PageHeader'
+import { useDocumentTitle } from './hooks/useDocumentTitle'
 import profileImage from './assets/profile.png'
 import walletIcon from './assets/dompet.png'
 import employeesIcon from './assets/gaji-karyawan.png'
@@ -65,6 +67,7 @@ function PayrollDetailDialog({ payment, onClose }) {
 }
 
 function PayrollPage() {
+  useDocumentTitle('Penggajian')
   const [payroll, setPayroll] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -159,6 +162,7 @@ function PayrollPage() {
 
   return (
     <section className="payroll-page" aria-label="Halaman penggajian">
+      <PageHeader title="Penggajian" subtitle="Ringkasan dan daftar pembayaran gaji karyawan" />
       {error ? (
         <div className="payroll-request-state" role="alert">
           <h2>Data penggajian belum dapat dimuat</h2>

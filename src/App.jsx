@@ -9,6 +9,7 @@ import TrackingPage from "./TrackingPage.jsx";
 const LoginPage = lazy(() => import("./pages/LoginPage"));
 const RegisterPage = lazy(() => import("./pages/RegisterPage"));
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
+const PayrollPage = lazy(() => import("./PayrollPage.jsx"));
 const AttendancePage = lazy(() => import("./pages/AttendancePage"));
 const AttendanceRecordPage = lazy(() => import("./pages/AttendanceRecordPage"));
 const EmployeesPage = lazy(() => import("./pages/EmployeesPage"));
@@ -68,6 +69,7 @@ export default function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/penggajian" element={<PayrollPage />} />
             <Route path="/absensi" element={<AttendancePage />} />
             <Route path="/absensi/catat" element={<AttendanceRecordPage />} />
             <Route path="/tracking-lokasi" element={<TrackingRoute />} />

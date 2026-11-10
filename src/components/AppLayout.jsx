@@ -5,7 +5,7 @@ import profileImage from '../assets/profile.png'
 import attendanceIcon from '../assets/karyawan.png'
 import dashboardIcon from '../assets/dashboard.png'
 import payrollIcon from '../assets/gaji.png'
-import leaveIcon from '../assets/izincuti.png'
+import leaveIcon from '../assets/IzinCutiIcon.png'
 import trackingIcon from '../assets/tracking.png'
 import managementIcon from '../assets/manajemen.png'
 import settingsIcon from '../assets/settings.png'
@@ -22,7 +22,7 @@ const navigation = [
   { label: 'Dashboard', icon: dashboardIcon, to: '/dashboard', match: ['/dashboard'] },
   { label: 'Absensi', icon: attendanceIcon, to: '/absensi', match: ['/absensi'] },
   { label: 'Karyawan', icon: attendanceIcon, to: '/karyawan', match: ['/karyawan'], roles: MANAGERS },
-  { label: 'Penggajian', icon: payrollIcon },
+  { label: 'Penggajian', icon: payrollIcon, to: '/penggajian', match: ['/penggajian'] },
   { label: 'Izin & Cuti', icon: leaveIcon, to: '/izin-cuti',match: ['/izin-cuti'], roles: ['super_admin', 'hrd'], },
   { label: 'Pengajuan Izin & Cuti', icon: leaveIcon, to: '/pengajuan-izin-cuti', match: ['/pengajuan-izin-cuti'], roles: ['karyawan', 'supervisor', 'hrd'],},
   { label: 'Tracking Lokasi', icon: trackingIcon, to: '/tracking-lokasi', match: ['/tracking-lokasi'] },
@@ -421,25 +421,25 @@ export default function AppLayout() {
               {notificationOpen && (
                 <div className="notification-dropdown">
                   <div className="notification-header">
-                  {/* button reset notifikasi dummy */}
-                  <button
-                    type="button"
-                    onClick={resetNotifications}
-                  >
-                    Reset Dummy
-                  </button>
-                    <div>
+                    <div className="notification-header-info">
                       <h3>Notifikasi</h3>
                       <p>{unreadCount} belum dibaca</p>
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={markAllAsRead}
-                      disabled={unreadCount === 0}
-                    >
-                      Tandai semua dibaca
-                    </button>
+                    <div className="notification-header-actions">
+                      <button
+                        type="button"
+                        onClick={resetNotifications}
+                      >
+                        Reset Dummy
+                      </button>
+                      <button
+                        type="button"
+                        onClick={markAllAsRead}
+                        disabled={unreadCount === 0}
+                      >
+                        Tandai semua dibaca
+                      </button>
+                    </div>
                   </div>
 
                   <div className="notification-tabs">

@@ -26,7 +26,7 @@ const people = [
 const slug = (s) => s.toLowerCase().replace(/[^a-z]+/g, '.');
 
 const users = [{
-  id_pengguna: 1, username: 'superadmin', email: 'superadmin@tintainspirasi.co.id', password: 'ChangeMe123!',
+  id_pengguna: 1, username: 'superadmin', email: 'superadmin@tintainspirasi.co.id', password: '12345',
   role: 'super_admin', status: 'aktif', status_persetujuan: 'approved', approved_by: null,
   approved_at: '2026-01-05T08:00:00', created_at: '2026-01-05T08:00:00', terakhir_aktif_menit: 5,
 }];

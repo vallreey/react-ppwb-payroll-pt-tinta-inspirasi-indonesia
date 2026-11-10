@@ -1254,7 +1254,7 @@
   display: none;
   position: absolute;
   top: -5px;
-  right: calc(100% + 10px);
+  right: 100%;
   width: 225px;
   padding: 7px;
   background: #fff;
@@ -1285,7 +1285,7 @@
   display: none;
   position: absolute;
   top: 0;
-  right: calc(100% + 8px);
+  right: 100%;
   width: 185px;
   padding: 7px;
   background: #fff;
@@ -1479,9 +1479,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   padding: 16px;
   border-bottom: 1px solid #e5e7eb;
+}
+
+.notification-header-info {
+  min-width: 0;
+}
+
+.notification-header-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
 }
 
 .notification-header h3 {
@@ -1502,6 +1513,8 @@
   background: transparent;
   color: #2563eb;
   font-size: 11px;
+  text-align: right;
+  white-space: nowrap;
   cursor: pointer;
 }
 
