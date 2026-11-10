@@ -14,6 +14,7 @@ import Icon from "./Icon";
 import BackToTop from "./BackToTop";
 import { useAuth } from "../context/AuthContext";
 import { LayoutContext } from "../context/LayoutContext";
+import { useToast } from "../context/ToastContext";
 import { ROLE_LABELS } from "../utils/format";
 
 const MANAGERS = ["super_admin", "hrd", "supervisor", "direktur"];
@@ -82,6 +83,7 @@ const navigation = [
 
 export default function AppLayout() {
   const { user, logout } = useAuth();
+  const toast = useToast();
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [header, setHeader] = useState({ title: "", subtitle: "" });
@@ -149,6 +151,9 @@ export default function AppLayout() {
   const [reduceMotion, setReduceMotion] = useState(() => {
     return localStorage.getItem("accessibility-reduce-motion") === "true";
   });
+  const [readTextOnClick, setReadTextOnClick] = useState(() => {
+    return localStorage.getItem("accessibility-read-text-on-click") === "true";
+  });
   const accountRef = useRef(null);
 
   useEffect(() => {
@@ -172,6 +177,7 @@ export default function AppLayout() {
       if (event.key === "Escape") {
         setAccountOpen(false);
         setMobileSidebarOpen(false);
+        if (readTextOnClick) window.speechSynthesis?.cancel();
       }
     };
     const onPointer = (event) => {
@@ -183,7 +189,7 @@ export default function AppLayout() {
       window.removeEventListener("keydown", onKey);
       document.removeEventListener("mousedown", onPointer);
     };
-  }, []);
+  }, [readTextOnClick]);
 
   function changeColorVisionMode(mode) {
     setColorVisionMode(mode);
@@ -236,6 +242,68 @@ export default function AppLayout() {
     localStorage.setItem("accessibility-reduce-motion", String(value));
   }
 
+  function toggleReadTextOnClick() {
+    const supported =
+      "speechSynthesis" in window &&
+      "SpeechSynthesisUtterance" in window;
+    if (!supported) {
+      toast.error("Browser ini belum mendukung fitur pembacaan teks.");
+      return;
+    }
+
+    const value = !readTextOnClick;
+    setReadTextOnClick(value);
+    localStorage.setItem("accessibility-read-text-on-click", String(value));
+    window.speechSynthesis.cancel();
+    toast.success(
+      value
+        ? "Mode baca teks aktif. Klik teks untuk mendengarkannya."
+        : "Mode baca teks dinonaktifkan.",
+    );
+  }
+
+  function readClickedText(event) {
+    if (!readTextOnClick) return;
+
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const sidebarItem = target.closest(".sidebar-link, .brand");
+    const sidebarText = sidebarItem?.textContent?.replace(/\s+/g, " ").trim();
+    if (sidebarText) {
+      speakText(sidebarText);
+      return;
+    }
+
+    if (
+      target.closest(
+        'a, button, input, textarea, select, summary, [role="button"], [aria-hidden="true"]',
+      )
+    ) {
+      return;
+    }
+
+    const textElement = target.closest(
+      "h1, h2, h3, h4, h5, h6, p, label, li, td, th, span, strong, em, time, dd, dt, legend, caption, blockquote",
+    );
+    const text = textElement?.textContent?.replace(/\s+/g, " ").trim();
+    if (!text) return;
+
+    speakText(text);
+  }
+
+  function speakText(text) {
+    try {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "id-ID";
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+    } catch (error) {
+      console.error("Gagal membacakan teks:", error);
+      toast.error("Teks tidak dapat dibacakan. Silakan coba lagi.");
+    }
+  }
+
   function resetAccessibility() {
     setColorVisionMode("normal");
     setHighContrast(false);
@@ -247,6 +315,8 @@ export default function AppLayout() {
 
     setKeyboardNavigation(false);
     setReduceMotion(false);
+    setReadTextOnClick(false);
+    window.speechSynthesis?.cancel();
 
     const keys = [
       "accessibility-color-vision",
@@ -257,6 +327,7 @@ export default function AppLayout() {
       "accessibility-underline-links",
       "accessibility-keyboard-navigation",
       "accessibility-reduce-motion",
+      "accessibility-read-text-on-click",
     ];
 
     keys.forEach((key) => localStorage.removeItem(key));
@@ -340,6 +411,7 @@ export default function AppLayout() {
         data-underline-links={underlineLinks}
         data-keyboard-navigation={keyboardNavigation}
         data-reduce-motion={reduceMotion}
+        onClick={readClickedText}
       >
         <svg
           aria-hidden="true"
@@ -751,15 +823,11 @@ export default function AppLayout() {
 
                             <button
                               type="button"
-                              onClick={() => {
-                                window.open(
-                                  "https://support.microsoft.com/accessibility",
-                                  "_blank",
-                                  "noopener,noreferrer",
-                                );
-                              }}
+                              onClick={toggleReadTextOnClick}
+                              aria-pressed={readTextOnClick}
                             >
-                              Bantuan Pembaca Layar
+                              Bacakan teks saat diklik{" "}
+                              {readTextOnClick && "✓"}
                             </button>
                           </div>
                         </details>

@@ -17,7 +17,7 @@ Aplikasi web pengelolaan payroll dan operasional karyawan PT Tinta Inspirasi Ind
 - **Izin dan cuti:** mengelola permohonan izin/cuti serta mengajukan permohonan sesuai peran pengguna.
 - **Manajemen pengguna:** mengelola akun dan memproses persetujuan pendaftaran.
 - **Pengaturan:** mengelola pengaturan perusahaan dan jam kerja.
-- **Menu akun:** membuka profil pengguna, logout, serta mengelola preferensi aksesibilitas seperti simulasi buta warna, kontras, ukuran tampilan, keterbacaan, dan navigasi keyboard.
+- **Menu akun:** membuka profil pengguna, logout, serta mengelola preferensi aksesibilitas seperti simulasi buta warna, kontras, ukuran tampilan, keterbacaan, dan navigasi keyboard. Mode **Bacakan teks saat diklik** menggunakan Web Speech API di browser untuk membacakan teks non-interaktif yang diklik dengan suara Bahasa Indonesia.
 - **Notifikasi:** membaca, memfilter, menghapus, menandai notifikasi sebagai dibaca, atau memulihkan notifikasi demo.
 
 ## Halaman dan Navigasi
@@ -137,4 +137,4 @@ npm run preview
 
 Antarmuka menggunakan Flexbox dan CSS Grid untuk tata letak, serta media queries untuk menyesuaikan sidebar, menu akun, konten, dan komponen halaman pada ukuran layar berbeda. Navigasi mobile menyediakan kontrol buka/tutup sidebar. Menu profil menampilkan identitas akun, tautan profil, aksesibilitas, dan logout; kontrol aksesibilitas menggunakan panel lipat yang dapat dioperasikan dengan klik/keyboard. Tombol tambah karyawan tetap mudah dijangkau di kanan bawah pada layar kecil.
 
-Implementasi aksesibilitas mencakup elemen HTML semantik, label form, teks alternatif gambar yang relevan, atribut ARIA untuk kontrol interaktif, tautan lewati ke konten utama, serta dukungan fokus dan navigasi keyboard.
+Implementasi aksesibilitas mencakup elemen HTML semantik, label form, teks alternatif gambar yang relevan, atribut ARIA untuk kontrol interaktif, tautan lewati ke konten utama, serta dukungan fokus dan navigasi keyboard. Pengguna juga dapat mengaktifkan **Bacakan teks saat diklik** melalui menu akun → Aksesibilitas → Tunanetra; klik teks untuk membacakannya dan tekan Escape untuk menghentikan suara. Fitur ini menggunakan suara yang tersedia di browser/perangkat dan memerlukan dukungan Web Speech API; fitur ini melengkapi, bukan menggantikan, screen reader sistem operasi.
