@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { useFetch } from '../hooks/useFetch';
@@ -21,11 +22,14 @@ import { cardClass, filterInputClass, thClass } from '../components/ui';
 const PER_PAGE = 10;
 const DEFAULT_FILTERS = { q: '', date: '', division: '', status: '' };
 const STATUS_STYLE = {
-  tetap: ['bg-indigo-400', 'bg-indigo-100 text-indigo-600'],
-  kontrak: ['bg-amber-300', 'bg-amber-100 text-amber-600'],
-  percobaan: ['bg-sky-300', 'bg-sky-100 text-sky-500'],
+  tetap: { summary: 'bg-indigo-100 text-indigo-600', badge: 'bg-indigo-100 text-indigo-600', icon: 'badge-check' },
+  kontrak: { summary: 'bg-amber-100 text-amber-600', badge: 'bg-amber-100 text-amber-600', icon: 'briefcase' },
+  percobaan: { summary: 'bg-sky-100 text-sky-600', badge: 'bg-sky-100 text-sky-600', icon: 'hourglass' },
 };
-const GENDER_STYLE = { L: ['bg-emerald-300', 'bg-emerald-100 text-emerald-600'], P: ['bg-rose-300', 'bg-rose-100 text-rose-500'] };
+const GENDER_STYLE = {
+  L: { summary: 'bg-emerald-100 text-emerald-600', badge: 'bg-emerald-100 text-emerald-600', icon: 'male' },
+  P: { summary: 'bg-rose-100 text-rose-600', badge: 'bg-rose-100 text-rose-600', icon: 'female' },
+};
 const STATUS_OPTIONS = { ...STATUS_KEPEGAWAIAN, nonaktif: 'Nonaktif' };
 
 export default function EmployeesPage() {
@@ -91,28 +95,27 @@ export default function EmployeesPage() {
   };
 
   const exportCsv = () => {
-    downloadCsv(`karyawan-${toISODate()}.csv`, [
-      ['Employee ID', 'Nama', 'Divisi', 'Jabatan', 'Gender', 'Status', 'Tanggal masuk'],
-      ...rows.map((e) => [
-        e.nik, e.nama_lengkap, e.department?.nama_departemen ?? '-', e.jabatan || '-', GENDER[e.jenis_kelamin] ?? '-',
-        e.status_tampil === 'nonaktif' ? 'Nonaktif' : STATUS_KEPEGAWAIAN[e.status_kepegawaian], formatDateShort(e.tanggal_masuk),
-      ]),
-    ]);
-    toast.success('File CSV berhasil dibuat.');
+    try {
+      downloadCsv(`karyawan-${toISODate()}.csv`, [
+        ['Employee ID', 'Nama', 'Divisi', 'Jabatan', 'Gender', 'Status', 'Tanggal masuk'],
+        ...rows.map((e) => [
+          e.nik, e.nama_lengkap, e.department?.nama_departemen ?? '-', e.jabatan || '-', GENDER[e.jenis_kelamin] ?? '-',
+          e.status_tampil === 'nonaktif' ? 'Nonaktif' : STATUS_KEPEGAWAIAN[e.status_kepegawaian], formatDateShort(e.tanggal_masuk),
+        ]),
+      ]);
+      toast.success(`${rows.length} data karyawan diekspor ke CSV.`);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Data karyawan gagal diekspor.');
+    }
   };
 
   return (
     <>
       <PageHeader title="Karyawan" subtitle="Gambaran umum karyawan di perusahaan" />
 
-      <section className={cardClass} aria-labelledby="list-heading">
+      <section className={`${cardClass} no-print`} aria-labelledby="list-heading">
         <div className="flex items-start justify-between gap-3">
           <h2 id="list-heading" className="text-sm font-semibold text-gray-900">List Karyawan</h2>
-          {canManage && (
-            <Button to="/karyawan/baru" variant="outline" aria-label="Tambah karyawan" className="!size-9 !rounded-lg !border-blue-500 !p-0">
-              <Icon name="plus" />
-            </Button>
-          )}
         </div>
         {loading ? <div className="mt-5"><CardsSkeleton count={2} /></div> : error ? null : (
           <div className="mt-5 grid divide-y divide-gray-200 rounded-lg border border-gray-200 md:grid-cols-2 md:divide-x md:divide-y-0">
@@ -122,7 +125,9 @@ export default function EmployeesPage() {
               <ul className="mt-4 space-y-3 text-xs">
                 {Object.entries(STATUS_KEPEGAWAIAN).map(([key, label]) => (
                   <li key={key} className="flex items-center gap-3">
-                    <span className={`size-4 shrink-0 rounded ${STATUS_STYLE[key][0]}`} aria-hidden="true" />
+                    <span className={`flex size-7 shrink-0 items-center justify-center rounded-lg ${STATUS_STYLE[key].summary}`} aria-hidden="true">
+                      <Icon name={STATUS_STYLE[key].icon} size={16} />
+                    </span>
                     <span className="w-24 text-xs text-gray-900">{label}</span>
                     <span className="tabular-nums text-gray-800">{summary.status[key]} People</span>
                   </li>
@@ -135,14 +140,18 @@ export default function EmployeesPage() {
               <ul className="mt-4 space-y-3 text-xs">
                 {Object.entries(GENDER).map(([key, label]) => (
                   <li key={key} className="flex items-center gap-3">
-                    <span className={`size-4 shrink-0 rounded ${GENDER_STYLE[key][0]}`} aria-hidden="true" />
+                    <span className={`flex size-7 shrink-0 items-center justify-center rounded-lg ${GENDER_STYLE[key].summary}`} aria-hidden="true">
+                      <Icon name={GENDER_STYLE[key].icon} size={16} />
+                    </span>
                     <span className="w-24 text-xs text-gray-900">{label}</span>
                     <span className="tabular-nums text-gray-800">{summary.gender[key]} People</span>
                   </li>
                 ))}
                 {summary.genderMissing > 0 && (
                   <li className="flex items-center gap-3 text-gray-500">
-                    <span className="size-4 shrink-0 rounded bg-gray-200" aria-hidden="true" />
+                    <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-500" aria-hidden="true">
+                      <Icon name="users" size={16} />
+                    </span>
                     <span className="w-24 text-xs">Belum diisi</span>
                     <span className="tabular-nums">{summary.genderMissing} People</span>
                   </li>
@@ -183,15 +192,15 @@ export default function EmployeesPage() {
             </select>
             <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500"><Icon name="chevron-down" className="size-4" /></span>
           </div>
-          <button type="button" onClick={exportCsv} disabled={!rows.length} className="flex h-10 items-center gap-2 rounded-lg bg-emerald-50 px-4 text-xs text-gray-800 shadow-card hover:bg-emerald-100 disabled:opacity-50">
-            <Icon name="excel" className="size-4 text-emerald-700" /> Export <span className="sr-only">ke CSV</span>
+          <button type="button" onClick={exportCsv} disabled={loading || !rows.length} className="flex h-10 items-center gap-2 rounded-lg bg-emerald-50 px-4 text-xs text-gray-800 shadow-card hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-50" aria-label="Ekspor hasil filter karyawan ke CSV">
+            <Icon name="excel" className="size-4 text-emerald-700" /> Export CSV
           </button>
-          <button type="button" onClick={() => window.print()} className="flex h-10 items-center gap-2 rounded-lg bg-red-50 px-4 text-xs text-gray-800 shadow-card hover:bg-red-100">
-            <Icon name="pdf" className="size-4 text-red-600" /> Export <span className="sr-only">ke PDF (cetak)</span>
+          <button type="button" onClick={() => window.print()} disabled={loading || !rows.length} className="flex h-10 items-center gap-2 rounded-lg bg-red-50 px-4 text-xs text-gray-800 shadow-card hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50" aria-label="Cetak atau simpan hasil filter karyawan sebagai PDF">
+            <Icon name="pdf" className="size-4 text-red-600" /> Export PDF
           </button>
         </form>
 
-        <div className="mt-5 overflow-x-auto rounded-xl border border-gray-100" aria-busy={loading}>
+        <div className="employee-screen-table mt-5 overflow-x-auto rounded-xl border border-gray-100" aria-busy={loading}>
           {loading && <TableSkeleton rows={6} cols={6} label="Memuat data karyawan…" />}
           {error && <ErrorState error={error} onRetry={reload} title="Data karyawan gagal dimuat" />}
           {!loading && !error && (
@@ -232,10 +241,11 @@ export default function EmployeesPage() {
                       </td>
                       <td className="whitespace-nowrap px-4 py-3 text-gray-700">{e.department?.nama_departemen ?? '-'}</td>
                       <td className="px-4 py-3 text-center">
-                        {e.jenis_kelamin ? <span className={`inline-flex rounded-md px-3 py-1 text-xs font-medium ${GENDER_STYLE[e.jenis_kelamin][1]}`}>{GENDER[e.jenis_kelamin]}</span> : <span className="text-gray-400">-</span>}
+                        {e.jenis_kelamin ? <span className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1 text-xs font-medium ${GENDER_STYLE[e.jenis_kelamin].badge}`}><Icon name={GENDER_STYLE[e.jenis_kelamin].icon} size={14} />{GENDER[e.jenis_kelamin]}</span> : <span className="text-gray-400">-</span>}
                       </td>
                       <td className="px-4 py-3 text-center">
-                        <span className={`inline-flex whitespace-nowrap rounded-md px-3 py-1 text-xs font-medium ${inactive ? 'bg-gray-200 text-gray-600' : STATUS_STYLE[e.status_kepegawaian][1]}`}>
+                        <span className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-md px-3 py-1 text-xs font-medium ${inactive ? 'bg-gray-200 text-gray-600' : STATUS_STYLE[e.status_kepegawaian].badge}`}>
+                          <Icon name={inactive ? 'power' : STATUS_STYLE[e.status_kepegawaian].icon} size={14} />
                           {inactive ? 'Nonaktif' : STATUS_KEPEGAWAIAN[e.status_kepegawaian]}
                         </span>
                       </td>
@@ -257,9 +267,48 @@ export default function EmployeesPage() {
             </table>
           )}
         </div>
+        <div className="employee-print-table">
+          <h1>Daftar Karyawan</h1>
+          <p>Diekspor pada {formatDateShort(toISODate())} · {rows.length} data</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Employee ID</th>
+                <th>Nama</th>
+                <th>Divisi</th>
+                <th>Jabatan</th>
+                <th>Gender</th>
+                <th>Status</th>
+                <th>Tanggal masuk</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((employee) => (
+                <tr key={employee.id_karyawan}>
+                  <td>{employee.nik}</td>
+                  <td>{employee.nama_lengkap}</td>
+                  <td>{employee.department?.nama_departemen ?? '-'}</td>
+                  <td>{employee.jabatan || '-'}</td>
+                  <td>{GENDER[employee.jenis_kelamin] ?? '-'}</td>
+                  <td>{employee.status_tampil === 'nonaktif' ? 'Nonaktif' : STATUS_KEPEGAWAIAN[employee.status_kepegawaian]}</td>
+                  <td>{formatDateShort(employee.tanggal_masuk)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       {!loading && !error && <Pagination page={currentPage} pageCount={pageCount} onChange={setPage} />}
+      {canManage && createPortal(
+        <div className="employee-add-fab no-print">
+          <Button to="/karyawan/baru" variant="blue" aria-label="Tambah karyawan" className="!rounded-lg">
+            <Icon name="plus" className="size-4" />
+            Tambah Karyawan
+          </Button>
+        </div>,
+        document.body,
+      )}
       {confirmDialog}
     </>
   );

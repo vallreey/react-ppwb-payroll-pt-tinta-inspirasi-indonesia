@@ -319,7 +319,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 13px;
-  align-items: stretch;
+  align-items: start;
 }
 
 .panel {
@@ -1226,8 +1226,10 @@
   top: calc(100% + 14px);
   right: 0;
   z-index: 50;
-  width: 280px;
+  width: 300px;
+  max-height: calc(100dvh - 84px);
   padding: 12px;
+  overflow-y: auto;
   background: #fff;
   border: 1px solid #eef0f4;
   border-radius: 17px;
@@ -1235,31 +1237,84 @@
 }
 
 .account-info {
-  padding: 8px 12px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 14px;
   border-bottom: 1px solid #f0f1f4;
 }
 
+.account-info__avatar {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border: 1px solid #e6edf5;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.account-info__identity {
+  min-width: 0;
+}
+
+.account-info__identity p {
+  margin: 0;
+}
+
+.account-info__identity p + p {
+  margin-top: 3px;
+}
+
+.account-profile-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin-top: 8px;
+  padding: 0 10px;
+  border-radius: 9px;
+  color: #46536a;
+  font-size: 13px;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.account-profile-link:hover,
+.account-profile-link:focus-visible {
+  background: #f3f7fc;
+  color: #2175bf;
+}
+
 .accessibility-wrapper {
-  position: relative;
-  margin-top: 5px;
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid #eef0f4;
 }
 
 .accessibility-trigger,
 .accessibility-category-trigger {
   display: flex;
   align-items: center;
+  width: 100%;
   gap: 10px;
-  min-height: 40px;
+  min-height: 42px;
   padding: 9px 12px;
   border-radius: 9px;
   color: #46536a;
   font-size: 13px;
   cursor: pointer;
+  list-style: none;
   transition: background 0.2s ease;
 }
 
+.accessibility-trigger::-webkit-details-marker,
+.accessibility-category-trigger::-webkit-details-marker {
+  display: none;
+}
+
 .accessibility-trigger:hover,
-.accessibility-category:hover > .accessibility-category-trigger {
+.accessibility-wrapper[open] > .accessibility-trigger,
+.accessibility-category[open] > .accessibility-category-trigger {
   background: #f3f7fc;
   color: #2175bf;
 }
@@ -1268,24 +1323,20 @@
   width: 15px;
   height: 15px;
   margin-left: auto;
+  transition: transform 0.2s ease;
+}
+
+.accessibility-wrapper[open] > .accessibility-trigger .accessibility-arrow,
+.accessibility-category[open] > .accessibility-category-trigger .accessibility-arrow {
+  transform: rotate(180deg);
 }
 
 .accessibility-dropdown {
-  display: none;
-  position: absolute;
-  top: -5px;
-  right: 100%;
-  width: 225px;
-  padding: 7px;
-  background: #fff;
-  border: 1px solid #eef0f4;
-  border-radius: 13px;
-  box-shadow: 0 8px 24px rgba(20, 30, 50, 0.12);
-}
-
-.accessibility-wrapper:hover > .accessibility-dropdown,
-.accessibility-wrapper:focus-within > .accessibility-dropdown {
   display: block;
+  width: 100%;
+  margin-top: 5px;
+  padding: 5px 0 0 9px;
+  border-left: 2px solid #e7eef8;
 }
 
 .accessibility-category {
@@ -1293,6 +1344,8 @@
 }
 
 .accessibility-category-trigger {
+  min-height: 38px;
+  padding: 8px 10px;
   font-size: 12px;
 }
 
@@ -1302,21 +1355,12 @@
 }
 
 .accessibility-submenu {
-  display: none;
-  position: absolute;
-  top: 0;
-  right: 100%;
-  width: 185px;
-  padding: 7px;
-  background: #fff;
-  border: 1px solid #eef0f4;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(20, 30, 50, 0.12);
-}
-
-.accessibility-category:hover > .accessibility-submenu,
-.accessibility-category:focus-within > .accessibility-submenu {
   display: block;
+  width: auto;
+  margin: 2px 6px 6px;
+  padding: 4px;
+  background: #f8fafc;
+  border-radius: 9px;
 }
 
 .accessibility-submenu div {
@@ -1459,7 +1503,43 @@
   position: relative;
 }
 
+.employee-add-fab {
+  position: fixed;
+  right: max(1.5rem, env(safe-area-inset-right));
+  bottom: max(1.5rem, env(safe-area-inset-bottom));
+  z-index: 35;
+}
+
+.employee-add-fab a {
+  box-shadow: 0 8px 20px rgb(37 99 235 / 28%);
+}
+
+.main-content--employee-list {
+  padding-bottom: 132px;
+}
+
+.back-to-top-button--employee-list {
+  bottom: calc(1.5rem + 44px + 12px);
+}
+
 @media (max-width: 760px) {
+  .employee-add-fab {
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .employee-add-fab a {
+    min-height: 44px;
+  }
+
+  .main-content--employee-list {
+    padding-bottom: 112px;
+  }
+
+  .back-to-top-button--employee-list {
+    bottom: calc(1rem + 44px + 12px);
+  }
+
   .account-dropdown {
     top: calc(100% + 8px);
     width: min(280px, calc(100vw - 28px));

@@ -446,7 +446,11 @@ export default function AppLayout() {
           </nav>
         </aside>
 
-        <main className="main-content" id="main" tabIndex={-1}>
+        <main
+          className={`main-content ${pathname === "/karyawan" ? "main-content--employee-list" : ""}`}
+          id="main"
+          tabIndex={-1}
+        >
           <header className="topbar">
             <button
               className="menu-toggle icon-button"
@@ -622,15 +626,25 @@ export default function AppLayout() {
                 {accountOpen && (
                   <div className="account-dropdown">
                     <div className="account-info">
+                      <img
+                        className="account-info__avatar"
+                        src={
+                          user.employee?.foto_profil ||
+                          user.foto_profil ||
+                          profileImage
+                        }
+                        alt=""
+                      />
+                      <div className="account-info__identity">
                       <p className="truncate text-xs font-medium text-gray-900">
                         {user.nama_tampil}
                       </p>
                       <p className="text-[11px] text-gray-500">
                         {ROLE_LABELS[user.role] ?? user.role}
                       </p>
+                      </div>
                     </div>
 
-                    {/* Menu Profil */}
                     <Link
                       to="/profil"
                       className="account-profile-link"
@@ -641,28 +655,26 @@ export default function AppLayout() {
                       <Icon name="arrow-right" className="ml-auto size-4" />
                     </Link>
 
-                    {/* Menu Aksesibilitas */}
-                    <div className="accessibility-wrapper">
-                      <div className="accessibility-trigger">
+                    <details className="accessibility-wrapper">
+                      <summary className="accessibility-trigger">
                         <Icon name="eye" className="size-4" />
                         <span>Aksesibilitas</span>
                         <Icon
-                          name="chevron-right"
+                          name="chevron-down"
                           className="accessibility-arrow"
                         />
-                      </div>
+                      </summary>
 
-                      {/* Dropdown aksesibilitas */}
                       <div className="accessibility-dropdown">
-                        <div className="accessibility-category">
-                          <div className="accessibility-category-trigger">
+                        <details className="accessibility-category">
+                          <summary className="accessibility-category-trigger">
                             <Icon name="eye" className="size-4" />
                             <span>Buta Warna</span>
                             <Icon
-                              name="chevron-right"
+                              name="chevron-down"
                               className="accessibility-arrow"
                             />
-                          </div>
+                          </summary>
 
                           <div className="accessibility-submenu">
                             <button
@@ -706,17 +718,17 @@ export default function AppLayout() {
                               Normal / Reset
                             </button>
                           </div>
-                        </div>
+                        </details>
 
-                        <div className="accessibility-category">
-                          <div className="accessibility-category-trigger">
+                        <details className="accessibility-category">
+                          <summary className="accessibility-category-trigger">
                             <Icon name="eye" className="size-4" />
                             <span>Tunanetra</span>
                             <Icon
-                              name="chevron-right"
+                              name="chevron-down"
                               className="accessibility-arrow"
                             />
-                          </div>
+                          </summary>
 
                           <div className="accessibility-submenu">
                             <button
@@ -750,17 +762,17 @@ export default function AppLayout() {
                               Bantuan Pembaca Layar
                             </button>
                           </div>
-                        </div>
+                        </details>
 
-                        <div className="accessibility-category">
-                          <div className="accessibility-category-trigger">
+                        <details className="accessibility-category">
+                          <summary className="accessibility-category-trigger">
                             <Icon name="settings" className="size-4" />
                             <span>Kesulitan Membaca</span>
                             <Icon
-                              name="chevron-right"
+                              name="chevron-down"
                               className="accessibility-arrow"
                             />
-                          </div>
+                          </summary>
 
                           <div className="accessibility-submenu">
                             <button
@@ -785,17 +797,17 @@ export default function AppLayout() {
                               Garis Bawah Tautan {underlineLinks && "✓"}
                             </button>
                           </div>
-                        </div>
+                        </details>
 
-                        <div className="accessibility-category">
-                          <div className="accessibility-category-trigger">
+                        <details className="accessibility-category">
+                          <summary className="accessibility-category-trigger">
                             <Icon name="users" className="size-4" />
                             <span>Keterbatasan Motorik</span>
                             <Icon
-                              name="chevron-right"
+                              name="chevron-down"
                               className="accessibility-arrow"
                             />
-                          </div>
+                          </summary>
 
                           <div className="accessibility-submenu">
                             <button
@@ -814,15 +826,15 @@ export default function AppLayout() {
                               Kurangi Animasi {reduceMotion && "✓"}
                             </button>
                           </div>
-                        </div>
+                        </details>
                         <div className="accessibility-reset">
                           <button type="button" onClick={resetAccessibility}>
                             <Icon name="rotate-ccw" className="size-4" />
                             Reset Semua Pengaturan
                           </button>
                         </div>
-                      </div>
                     </div>
+                    </details>
 
                     {/* Logout */}
                     <button
