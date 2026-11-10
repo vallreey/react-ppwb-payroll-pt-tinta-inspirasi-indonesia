@@ -38,6 +38,39 @@ export default function AppLayout() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 760px)').matches)
   const [accountOpen, setAccountOpen] = useState(false)
+  const [notificationOpen, setNotificationOpen] = useState(false)
+  const [notificationFilter, setNotificationFilter] = useState('all')
+
+  const [notifications, setNotifications] = useState(() => {
+    try {
+      const savedNotifications = localStorage.getItem('app-notifications')
+
+      if (savedNotifications) {
+        return JSON.parse(savedNotifications)
+      }
+    } catch (error) {
+      console.error('Gagal memuat notifikasi:', error)
+    }
+
+    return [
+      {
+        id: 1,
+        title: 'Selamat Datang',
+        message: 'Selamat datang di aplikasi Payroll PT. Tinta Inspirasi Indonesia.',
+        time: new Date().toISOString(),
+        category: 'info',
+        read: false,
+      },
+      {
+        id: 2,
+        title: 'Informasi Absensi',
+        message: 'Jangan lupa melakukan absensi hari ini.',
+        time: new Date().toISOString(),
+        category: 'reminder',
+        read: false,
+      },
+    ]
+  })
   const [colorVisionMode, setColorVisionMode] = useState(() => {
     return localStorage.getItem('accessibility-color-vision') || 'normal'
   })
@@ -70,6 +103,13 @@ export default function AppLayout() {
     breakpoint.addEventListener('change', updateBreakpoint)
     return () => breakpoint.removeEventListener('change', updateBreakpoint)
   }, [])
+
+  useEffect(() => {
+    localStorage.setItem(
+      'app-notifications',
+      JSON.stringify(notifications)
+    )
+  }, [notifications])
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -172,6 +212,60 @@ export default function AppLayout() {
     ]
   
     keys.forEach((key) => localStorage.removeItem(key))
+  }
+
+  const unreadCount = notifications.filter(
+    (notification) => !notification.read
+  ).length
+
+  function markAsRead(id) {
+    setNotifications((previous) =>
+      previous.map((notification) =>
+        notification.id === id
+          ? { ...notification, read: true }
+          : notification
+      )
+    )
+  }
+
+  function markAllAsRead() {
+    setNotifications((previous) =>
+      previous.map((notification) => ({
+        ...notification,
+        read: true,
+      }))
+    )
+  }
+
+  function deleteNotification(id) {
+    setNotifications((previous) =>
+      previous.filter((notification) => notification.id !== id)
+    )
+  }
+
+  // Memunculkan kembali notifikasi dummy
+  function resetNotifications() {
+    setNotifications([
+      {
+        id: 1,
+        title: 'Selamat Datang',
+        message: 'Selamat datang di aplikasi Payroll PT. Tinta Inspirasi Indonesia.',
+        time: new Date().toISOString(),
+        category: 'info',
+        read: false,
+      },
+      {
+        id: 2,
+        title: 'Informasi Absensi',
+        message: 'Jangan lupa melakukan absensi hari ini.',
+        time: new Date().toISOString(),
+        category: 'reminder',
+        read: false,
+      },
+    ])
+
+    setNotificationFilter('all')
+    setNotificationOpen(true)
   }
 
   function closeMobileSidebar() {
@@ -305,9 +399,123 @@ export default function AppLayout() {
               {header.subtitle && <p>{header.subtitle}</p>}
             </div>
             <div className="topbar-actions">
-              <button className="icon-button notification-button" type="button" aria-label="Notifikasi">
+            <div className="notification-wrapper">
+              <button
+                className="icon-button notification-button"
+                type="button"
+                aria-label={`Notifikasi, ${unreadCount} belum dibaca`}
+                aria-expanded={notificationOpen}
+                onClick={() => setNotificationOpen((open) => !open)}
+              >
                 <img src={notificationIcon} alt="" />
+
+                {unreadCount > 0 && (
+                  <span className="notification-badge">
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
               </button>
+
+              {notificationOpen && (
+                <div className="notification-dropdown">
+                  <div className="notification-header">
+                  {/* button reset notifikasi dummy */}
+                  <button
+                    type="button"
+                    onClick={resetNotifications}
+                  >
+                    Reset Dummy
+                  </button>
+                    <div>
+                      <h3>Notifikasi</h3>
+                      <p>{unreadCount} belum dibaca</p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={markAllAsRead}
+                      disabled={unreadCount === 0}
+                    >
+                      Tandai semua dibaca
+                    </button>
+                  </div>
+
+                  <div className="notification-tabs">
+                    <button
+                      type="button"
+                      className={notificationFilter === 'all' ? 'active' : ''}
+                      onClick={() => setNotificationFilter('all')}
+                    >
+                      Semua
+                    </button>
+
+                    <button
+                      type="button"
+                      className={notificationFilter === 'unread' ? 'active' : ''}
+                      onClick={() => setNotificationFilter('unread')}
+                    >
+                      Belum Dibaca
+                    </button>
+                  </div>
+
+                  <div className="notification-list">
+                    {notifications.filter((notification) =>
+                      notificationFilter === 'unread'
+                        ? !notification.read
+                        : true
+                    ).length === 0 ? (
+                      <div className="notification-empty">
+                        <Icon name="bell" />
+                        <p>Tidak ada notifikasi.</p>
+                      </div>
+                    ) : (
+                      notifications
+                        .filter((notification) =>
+                          notificationFilter === 'unread'
+                            ? !notification.read
+                            : true
+                        )
+                        .map((notification) => (
+                          <div
+                            key={notification.id}
+                            className={`notification-item ${
+                              notification.read ? 'is-read' : 'is-unread'
+                            }`}
+                          >
+                            <button
+                              type="button"
+                              className="notification-content"
+                              onClick={() => markAsRead(notification.id)}
+                            >
+                              <div className="notification-item-title">
+                                <strong>{notification.title}</strong>
+                                {!notification.read && (
+                                  <span className="notification-dot" />
+                                )}
+                              </div>
+
+                              <p>{notification.message}</p>
+
+                              <small>
+                                {new Date(notification.time).toLocaleString('id-ID')}
+                              </small>
+                            </button>
+
+                            <button
+                              type="button"
+                              className="notification-delete"
+                              aria-label={`Hapus notifikasi ${notification.title}`}
+                              onClick={() => deleteNotification(notification.id)}
+                            >
+                              🗑
+                            </button>
+                          </div>
+                        ))
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
               <div className="relative" ref={accountRef}>
                 <button
                   className="profile-button"
