@@ -38,6 +38,9 @@ export default function AppLayout() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 760px)').matches)
   const [accountOpen, setAccountOpen] = useState(false)
+  const [colorVisionMode, setColorVisionMode] = useState(() => {
+    return localStorage.getItem('accessibility-color-vision') || 'normal'
+  })
   const accountRef = useRef(null)
 
   useEffect(() => {
@@ -70,6 +73,11 @@ export default function AppLayout() {
     }
   }, [])
 
+  function changeColorVisionMode(mode) {
+    setColorVisionMode(mode)
+    localStorage.setItem('accessibility-color-vision', mode)
+  }
+
   function closeMobileSidebar() {
     setMobileSidebarOpen(false)
   }
@@ -83,7 +91,54 @@ export default function AppLayout() {
 
   return (
     <LayoutContext.Provider value={setHeader}>
-      <div className={`app-shell ${sidebarOpen ? '' : 'sidebar-collapsed'}`}>
+      <div
+        className={`app-shell ${sidebarOpen ? '' : 'sidebar-collapsed'}`}
+        data-color-vision={colorVisionMode}
+      >
+        <svg
+          aria-hidden="true"
+          width="0"
+          height="0"
+          style={{ position: 'absolute' }}
+        >
+          <defs>
+            <filter id="protanopia-filter">
+              <feColorMatrix
+                type="matrix"
+                values="
+                  0.567 0.433 0 0 0
+                  0.558 0.442 0 0 0
+                  0 0.242 0.758 0 0
+                  0 0 0 1 0
+                "
+              />
+            </filter>
+
+            <filter id="deuteranopia-filter">
+              <feColorMatrix
+                type="matrix"
+                values="
+                  0.625 0.375 0 0 0
+                  0.700 0.300 0 0 0
+                  0 0.300 0.700 0 0
+                  0 0 0 1 0
+                "
+              />
+            </filter>
+
+            <filter id="tritanopia-filter">
+              <feColorMatrix
+                type="matrix"
+                values="
+                  0.950 0.050 0 0 0
+                  0 0.433 0.567 0 0
+                  0 0.475 0.525 0 0
+                  0 0 0 1 0
+                "
+              />
+            </filter>
+          </defs>
+        </svg>
         <a href="#main" className="skip-link">Lewati ke konten utama</a>
         {mobileSidebarOpen && <button className="mobile-backdrop" aria-label="Tutup menu" onClick={closeMobileSidebar} />}
         <aside className={`sidebar ${mobileSidebarOpen ? 'sidebar--mobile-open' : ''}`} aria-label="Navigasi utama">
@@ -162,13 +217,122 @@ export default function AppLayout() {
                   <img src={profileImage} alt="" />
                 </button>
                 {accountOpen && (
-                  <div className="absolute right-0 z-20 mt-2 w-56 rounded-xl bg-white p-2 shadow-lg ring-1 ring-gray-100">
-                    <div className="px-3 py-2">
-                      <p className="truncate text-xs font-medium text-gray-900">{user.nama_tampil}</p>
-                      <p className="text-[11px] text-gray-500">{ROLE_LABELS[user.role] ?? user.role}</p>
+                  <div className="account-dropdown">
+                    <div className="account-info">
+                      <p className="truncate text-xs font-medium text-gray-900">
+                        {user.nama_tampil}
+                      </p>
+                      <p className="text-[11px] text-gray-500">
+                        {ROLE_LABELS[user.role] ?? user.role}
+                      </p>
                     </div>
-                    <button type="button" onClick={handleLogout} className="flex w-full items-center gap-2 rounded-lg border-t border-gray-100 px-3 py-2 text-xs text-gray-700 hover:bg-gray-50">
-                      <Icon name="logout" className="size-4" /> Logout
+
+                    {/* Menu Aksesibilitas */}
+                    <div className="accessibility-wrapper">
+                      <div className="accessibility-trigger">
+                        <Icon name="eye" className="size-4" />
+                        <span>Aksesibilitas</span>
+                        <Icon name="chevron-right" className="accessibility-arrow" />
+                      </div>
+
+                      {/* Dropdown kategori aksesibilitas */}
+                      <div className="accessibility-dropdown">
+                        <div className="accessibility-category">
+                          <div className="accessibility-category-trigger">
+                            <Icon name="eye" className="size-4" />
+                            <span>Buta Warna</span>
+                            <Icon name="chevron-right" className="accessibility-arrow" />
+                          </div>
+
+                          <div className="accessibility-submenu">
+                            <button
+                              type="button"
+                              onClick={() => changeColorVisionMode('protanopia')}
+                              aria-pressed={colorVisionMode === 'protanopia'}
+                            >
+                              Protanopia
+                              {colorVisionMode === 'protanopia' && ' ✓'}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => changeColorVisionMode('deuteranopia')}
+                              aria-pressed={colorVisionMode === 'deuteranopia'}
+                            >
+                              Deuteranopia
+                              {colorVisionMode === 'deuteranopia' && ' ✓'}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => changeColorVisionMode('tritanopia')}
+                              aria-pressed={colorVisionMode === 'tritanopia'}
+                            >
+                              Tritanopia
+                              {colorVisionMode === 'tritanopia' && ' ✓'}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => changeColorVisionMode('normal')}
+                              aria-pressed={colorVisionMode === 'normal'}
+                            >
+                              Normal / Reset
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="accessibility-category">
+                          <div className="accessibility-category-trigger">
+                            <Icon name="eye" className="size-4" />
+                            <span>Tunanetra</span>
+                            <Icon name="chevron-right" className="accessibility-arrow" />
+                          </div>
+
+                          <div className="accessibility-submenu">
+                            <div>Kontras Tinggi</div>
+                            <div>Perbesar Teks</div>
+                            <div>Mode Pembaca Layar</div>
+                          </div>
+                        </div>
+
+                        <div className="accessibility-category">
+                          <div className="accessibility-category-trigger">
+                            <Icon name="settings" className="size-4" />
+                            <span>Kesulitan Membaca</span>
+                            <Icon name="chevron-right" className="accessibility-arrow" />
+                          </div>
+
+                          <div className="accessibility-submenu">
+                            <div>Font Mudah Dibaca</div>
+                            <div>Jarak Antar Teks</div>
+                            <div>Garis Bawah Tautan</div>
+                          </div>
+                        </div>
+
+                        <div className="accessibility-category">
+                          <div className="accessibility-category-trigger">
+                            <Icon name="users" className="size-4" />
+                            <span>Keterbatasan Motorik</span>
+                            <Icon name="chevron-right" className="accessibility-arrow" />
+                          </div>
+
+                          <div className="accessibility-submenu">
+                            <div>Navigasi Keyboard</div>
+                            <div>Kurangi Animasi</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Logout */}
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="account-logout"
+                    >
+                      <Icon name="logout" className="size-4" />
+                      Logout
                     </button>
                   </div>
                 )}
