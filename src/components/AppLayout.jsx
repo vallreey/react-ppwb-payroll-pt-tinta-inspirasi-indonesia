@@ -47,10 +47,18 @@ export default function AppLayout() {
   const [largeView, setLargeView] = useState(() => {
     return localStorage.getItem('accessibility-large-view') === 'true'
   })
-  const [readableFont, setReadableFont] = useState(false)
-  const [textSpacing, setTextSpacing] = useState(false)
-  const [underlineLinks, setUnderlineLinks] = useState(false)
-  const [keyboardNavigation, setKeyboardNavigation] = useState(false)
+  const [readableFont, setReadableFont] = useState(() => {
+    return localStorage.getItem('accessibility-readable-font') === 'true'
+  })
+  const [textSpacing, setTextSpacing] = useState(() => {
+    return localStorage.getItem('accessibility-text-spacing') === 'true'
+  })
+  const [underlineLinks, setUnderlineLinks] = useState(() => {
+    return localStorage.getItem('accessibility-underline-links') === 'true'
+  })
+  const [keyboardNavigation, setKeyboardNavigation] = useState(() => {
+    return localStorage.getItem('accessibility-keyboard-navigation') === 'true'
+  })
   const [reduceMotion, setReduceMotion] = useState(() => {
     return localStorage.getItem('accessibility-reduce-motion') === 'true'
   })
@@ -124,7 +132,13 @@ export default function AppLayout() {
   }
 
   function toggleKeyboardNavigation() {
-    setKeyboardNavigation((prev) => !prev)
+    const value = !keyboardNavigation
+  
+    setKeyboardNavigation(value)
+    localStorage.setItem(
+      'accessibility-keyboard-navigation',
+      String(value)
+    )
   }
   
   function toggleReduceMotion() {
@@ -132,6 +146,32 @@ export default function AppLayout() {
   
     setReduceMotion(value)
     localStorage.setItem('accessibility-reduce-motion', String(value))
+  }
+
+  function resetAccessibility() {
+    setColorVisionMode('normal')
+    setHighContrast(false)
+    setLargeView(false)
+  
+    setReadableFont(false)
+    setTextSpacing(false)
+    setUnderlineLinks(false)
+  
+    setKeyboardNavigation(false)
+    setReduceMotion(false)
+  
+    const keys = [
+      'accessibility-color-vision',
+      'accessibility-high-contrast',
+      'accessibility-large-view',
+      'accessibility-readable-font',
+      'accessibility-text-spacing',
+      'accessibility-underline-links',
+      'accessibility-keyboard-navigation',
+      'accessibility-reduce-motion',
+    ]
+  
+    keys.forEach((key) => localStorage.removeItem(key))
   }
 
   function closeMobileSidebar() {
@@ -298,7 +338,7 @@ export default function AppLayout() {
                         <Icon name="chevron-right" className="accessibility-arrow" />
                       </div>
 
-                      {/* Dropdown kategori aksesibilitas */}
+                      {/* Dropdown aksesibilitas */}
                       <div className="accessibility-dropdown">
                         <div className="accessibility-category">
                           <div className="accessibility-category-trigger">
@@ -443,9 +483,18 @@ export default function AppLayout() {
                           </button>
                           </div>
                         </div>
+                        <div className="accessibility-reset">
+                          <button
+                            type="button"
+                            onClick={resetAccessibility}
+                          >
+                            <Icon name="rotate-ccw" className="size-4" />
+                            Reset Semua Pengaturan
+                          </button>
+                        </div>
                       </div>
                     </div>
-
+                              
                     {/* Logout */}
                     <button
                       type="button"
