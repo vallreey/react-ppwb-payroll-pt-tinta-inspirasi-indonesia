@@ -41,6 +41,12 @@ export default function AppLayout() {
   const [colorVisionMode, setColorVisionMode] = useState(() => {
     return localStorage.getItem('accessibility-color-vision') || 'normal'
   })
+  const [highContrast, setHighContrast] = useState(() => {
+    return localStorage.getItem('accessibility-high-contrast') === 'true'
+  })
+  const [largeView, setLargeView] = useState(() => {
+    return localStorage.getItem('accessibility-large-view') === 'true'
+  })
   const accountRef = useRef(null)
 
   useEffect(() => {
@@ -78,6 +84,20 @@ export default function AppLayout() {
     localStorage.setItem('accessibility-color-vision', mode)
   }
 
+  function toggleHighContrast() {
+    const newValue = !highContrast
+  
+    setHighContrast(newValue)
+    localStorage.setItem('accessibility-high-contrast', String(newValue))
+  }
+  
+  function toggleLargeView() {
+    const newValue = !largeView
+  
+    setLargeView(newValue)
+    localStorage.setItem('accessibility-large-view', String(newValue))
+  }
+
   function closeMobileSidebar() {
     setMobileSidebarOpen(false)
   }
@@ -94,6 +114,8 @@ export default function AppLayout() {
       <div
         className={`app-shell ${sidebarOpen ? '' : 'sidebar-collapsed'}`}
         data-color-vision={colorVisionMode}
+        data-high-contrast={highContrast}
+        data-large-view={largeView}
       >
         <svg
           aria-hidden="true"
@@ -290,9 +312,36 @@ export default function AppLayout() {
                           </div>
 
                           <div className="accessibility-submenu">
-                            <div>Kontras Tinggi</div>
-                            <div>Perbesar Teks</div>
-                            <div>Mode Pembaca Layar</div>
+                            <button
+                              type="button"
+                              onClick={toggleHighContrast}
+                              aria-pressed={highContrast}
+                            >
+                              Kontras Tinggi
+                              {highContrast && ' ✓'}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={toggleLargeView}
+                              aria-pressed={largeView}
+                            >
+                              Perbesar Tampilan
+                              {largeView && ' ✓'}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                window.open(
+                                  'https://support.microsoft.com/accessibility',
+                                  '_blank',
+                                  'noopener,noreferrer'
+                                )
+                              }}
+                            >
+                              Bantuan Pembaca Layar
+                            </button>
                           </div>
                         </div>
 

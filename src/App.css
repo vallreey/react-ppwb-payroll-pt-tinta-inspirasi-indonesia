@@ -1331,16 +1331,33 @@
   background: #f8f9fb;
 }
 
+.app-shell {
+  --color-vision-filter: none;
+  --contrast-level: 1;
+}
+
 .app-shell[data-color-vision="protanopia"] {
-  filter: url("#protanopia-filter");
+  --color-vision-filter: url("#protanopia-filter");
 }
 
 .app-shell[data-color-vision="deuteranopia"] {
-  filter: url("#deuteranopia-filter");
+  --color-vision-filter: url("#deuteranopia-filter");
 }
 
 .app-shell[data-color-vision="tritanopia"] {
-  filter: url("#tritanopia-filter");
+  --color-vision-filter: url("#tritanopia-filter");
+}
+
+.app-shell {
+  filter: var(--color-vision-filter) contrast(var(--contrast-level));
+}
+
+.app-shell[data-high-contrast="true"] {
+  --contrast-level: 1.5;
+}
+
+.app-shell[data-large-view="true"] {
+  zoom: 1.1;
 }
 
 .accessibility-submenu button {
