@@ -50,6 +50,10 @@ export default function AppLayout() {
   const [readableFont, setReadableFont] = useState(false)
   const [textSpacing, setTextSpacing] = useState(false)
   const [underlineLinks, setUnderlineLinks] = useState(false)
+  const [keyboardNavigation, setKeyboardNavigation] = useState(false)
+  const [reduceMotion, setReduceMotion] = useState(() => {
+    return localStorage.getItem('accessibility-reduce-motion') === 'true'
+  })
   const accountRef = useRef(null)
 
   useEffect(() => {
@@ -119,6 +123,17 @@ export default function AppLayout() {
     localStorage.setItem('accessibility-underline-links', String(value))
   }
 
+  function toggleKeyboardNavigation() {
+    setKeyboardNavigation((prev) => !prev)
+  }
+  
+  function toggleReduceMotion() {
+    const value = !reduceMotion
+  
+    setReduceMotion(value)
+    localStorage.setItem('accessibility-reduce-motion', String(value))
+  }
+
   function closeMobileSidebar() {
     setMobileSidebarOpen(false)
   }
@@ -140,6 +155,8 @@ export default function AppLayout() {
         data-readable-font={readableFont}
         data-text-spacing={textSpacing}
         data-underline-links={underlineLinks}
+        data-keyboard-navigation={keyboardNavigation}
+        data-reduce-motion={reduceMotion}
       >
         <svg
           aria-hidden="true"
@@ -409,8 +426,21 @@ export default function AppLayout() {
                           </div>
 
                           <div className="accessibility-submenu">
-                            <div>Navigasi Keyboard</div>
-                            <div>Kurangi Animasi</div>
+                          <button
+                            type="button"
+                            onClick={toggleKeyboardNavigation}
+                            aria-pressed={keyboardNavigation}
+                          >
+                            Navigasi Keyboard {keyboardNavigation && '✓'}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={toggleReduceMotion}
+                            aria-pressed={reduceMotion}
+                          >
+                            Kurangi Animasi {reduceMotion && '✓'}
+                          </button>
                           </div>
                         </div>
                       </div>
