@@ -23,10 +23,12 @@ const navigation = [
   { label: 'Absensi', icon: attendanceIcon, to: '/absensi', match: ['/absensi'] },
   { label: 'Karyawan', icon: attendanceIcon, to: '/karyawan', match: ['/karyawan'], roles: MANAGERS },
   { label: 'Penggajian', icon: payrollIcon },
-  { label: 'Izin & Cuti', icon: leaveIcon },
+  { label: 'Izin & Cuti', icon: leaveIcon, to: '/izin-cuti',match: ['/izin-cuti'], roles: ['super_admin', 'hrd'], },
+  { label: 'Pengajuan Izin & Cuti', icon: leaveIcon, to: '/pengajuan-izin-cuti', match: ['/pengajuan-izin-cuti'], roles: ['karyawan', 'supervisor', 'hrd'],},
   { label: 'Tracking Lokasi', icon: trackingIcon, to: '/tracking-lokasi', match: ['/tracking-lokasi'] },
   { label: 'Manajemen Pengguna', icon: managementIcon, to: '/pengguna', match: ['/pengguna', '/persetujuan-akun'], roles: ['super_admin'] },
   { label: 'Settings', icon: settingsIcon, to: '/pengaturan', match: ['/pengaturan'], roles: ['super_admin'] },
+  
 ]
 
 export default function AppLayout() {
@@ -38,6 +40,63 @@ export default function AppLayout() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 760px)').matches)
   const [accountOpen, setAccountOpen] = useState(false)
+  const [notificationOpen, setNotificationOpen] = useState(false)
+  const [notificationFilter, setNotificationFilter] = useState('all')
+
+  const [notifications, setNotifications] = useState(() => {
+    try {
+      const savedNotifications = localStorage.getItem('app-notifications')
+
+      if (savedNotifications) {
+        return JSON.parse(savedNotifications)
+      }
+    } catch (error) {
+      console.error('Gagal memuat notifikasi:', error)
+    }
+
+    return [
+      {
+        id: 1,
+        title: 'Selamat Datang',
+        message: 'Selamat datang di aplikasi Payroll PT. Tinta Inspirasi Indonesia.',
+        time: new Date().toISOString(),
+        category: 'info',
+        read: false,
+      },
+      {
+        id: 2,
+        title: 'Informasi Absensi',
+        message: 'Jangan lupa melakukan absensi hari ini.',
+        time: new Date().toISOString(),
+        category: 'reminder',
+        read: false,
+      },
+    ]
+  })
+  const [colorVisionMode, setColorVisionMode] = useState(() => {
+    return localStorage.getItem('accessibility-color-vision') || 'normal'
+  })
+  const [highContrast, setHighContrast] = useState(() => {
+    return localStorage.getItem('accessibility-high-contrast') === 'true'
+  })
+  const [largeView, setLargeView] = useState(() => {
+    return localStorage.getItem('accessibility-large-view') === 'true'
+  })
+  const [readableFont, setReadableFont] = useState(() => {
+    return localStorage.getItem('accessibility-readable-font') === 'true'
+  })
+  const [textSpacing, setTextSpacing] = useState(() => {
+    return localStorage.getItem('accessibility-text-spacing') === 'true'
+  })
+  const [underlineLinks, setUnderlineLinks] = useState(() => {
+    return localStorage.getItem('accessibility-underline-links') === 'true'
+  })
+  const [keyboardNavigation, setKeyboardNavigation] = useState(() => {
+    return localStorage.getItem('accessibility-keyboard-navigation') === 'true'
+  })
+  const [reduceMotion, setReduceMotion] = useState(() => {
+    return localStorage.getItem('accessibility-reduce-motion') === 'true'
+  })
   const accountRef = useRef(null)
 
   useEffect(() => {
@@ -46,6 +105,13 @@ export default function AppLayout() {
     breakpoint.addEventListener('change', updateBreakpoint)
     return () => breakpoint.removeEventListener('change', updateBreakpoint)
   }, [])
+
+  useEffect(() => {
+    localStorage.setItem(
+      'app-notifications',
+      JSON.stringify(notifications)
+    )
+  }, [notifications])
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -70,6 +136,140 @@ export default function AppLayout() {
     }
   }, [])
 
+  function changeColorVisionMode(mode) {
+    setColorVisionMode(mode)
+    localStorage.setItem('accessibility-color-vision', mode)
+  }
+
+  function toggleHighContrast() {
+    const newValue = !highContrast
+  
+    setHighContrast(newValue)
+    localStorage.setItem('accessibility-high-contrast', String(newValue))
+  }
+  
+  function toggleLargeView() {
+    const newValue = !largeView
+  
+    setLargeView(newValue)
+    localStorage.setItem('accessibility-large-view', String(newValue))
+  }
+
+  function toggleReadableFont() {
+    const value = !readableFont
+    setReadableFont(value)
+    localStorage.setItem('accessibility-readable-font', String(value))
+  }
+  
+  function toggleTextSpacing() {
+    const value = !textSpacing
+    setTextSpacing(value)
+    localStorage.setItem('accessibility-text-spacing', String(value))
+  }
+  
+  function toggleUnderlineLinks() {
+    const value = !underlineLinks
+    setUnderlineLinks(value)
+    localStorage.setItem('accessibility-underline-links', String(value))
+  }
+
+  function toggleKeyboardNavigation() {
+    const value = !keyboardNavigation
+  
+    setKeyboardNavigation(value)
+    localStorage.setItem(
+      'accessibility-keyboard-navigation',
+      String(value)
+    )
+  }
+  
+  function toggleReduceMotion() {
+    const value = !reduceMotion
+  
+    setReduceMotion(value)
+    localStorage.setItem('accessibility-reduce-motion', String(value))
+  }
+
+  function resetAccessibility() {
+    setColorVisionMode('normal')
+    setHighContrast(false)
+    setLargeView(false)
+  
+    setReadableFont(false)
+    setTextSpacing(false)
+    setUnderlineLinks(false)
+  
+    setKeyboardNavigation(false)
+    setReduceMotion(false)
+  
+    const keys = [
+      'accessibility-color-vision',
+      'accessibility-high-contrast',
+      'accessibility-large-view',
+      'accessibility-readable-font',
+      'accessibility-text-spacing',
+      'accessibility-underline-links',
+      'accessibility-keyboard-navigation',
+      'accessibility-reduce-motion',
+    ]
+  
+    keys.forEach((key) => localStorage.removeItem(key))
+  }
+
+  const unreadCount = notifications.filter(
+    (notification) => !notification.read
+  ).length
+
+  function markAsRead(id) {
+    setNotifications((previous) =>
+      previous.map((notification) =>
+        notification.id === id
+          ? { ...notification, read: true }
+          : notification
+      )
+    )
+  }
+
+  function markAllAsRead() {
+    setNotifications((previous) =>
+      previous.map((notification) => ({
+        ...notification,
+        read: true,
+      }))
+    )
+  }
+
+  function deleteNotification(id) {
+    setNotifications((previous) =>
+      previous.filter((notification) => notification.id !== id)
+    )
+  }
+
+  // Memunculkan kembali notifikasi dummy
+  function resetNotifications() {
+    setNotifications([
+      {
+        id: 1,
+        title: 'Selamat Datang',
+        message: 'Selamat datang di aplikasi Payroll PT. Tinta Inspirasi Indonesia.',
+        time: new Date().toISOString(),
+        category: 'info',
+        read: false,
+      },
+      {
+        id: 2,
+        title: 'Informasi Absensi',
+        message: 'Jangan lupa melakukan absensi hari ini.',
+        time: new Date().toISOString(),
+        category: 'reminder',
+        read: false,
+      },
+    ])
+
+    setNotificationFilter('all')
+    setNotificationOpen(true)
+  }
+
   function closeMobileSidebar() {
     setMobileSidebarOpen(false)
   }
@@ -83,7 +283,61 @@ export default function AppLayout() {
 
   return (
     <LayoutContext.Provider value={setHeader}>
-      <div className={`app-shell ${sidebarOpen ? '' : 'sidebar-collapsed'}`}>
+      <div
+        className={`app-shell ${sidebarOpen ? '' : 'sidebar-collapsed'}`}
+        data-color-vision={colorVisionMode}
+        data-high-contrast={highContrast}
+        data-large-view={largeView}
+        data-readable-font={readableFont}
+        data-text-spacing={textSpacing}
+        data-underline-links={underlineLinks}
+        data-keyboard-navigation={keyboardNavigation}
+        data-reduce-motion={reduceMotion}
+      >
+        <svg
+          aria-hidden="true"
+          width="0"
+          height="0"
+          style={{ position: 'absolute' }}
+        >
+          <defs>
+            <filter id="protanopia-filter">
+              <feColorMatrix
+                type="matrix"
+                values="
+                  0.567 0.433 0 0 0
+                  0.558 0.442 0 0 0
+                  0 0.242 0.758 0 0
+                  0 0 0 1 0
+                "
+              />
+            </filter>
+
+            <filter id="deuteranopia-filter">
+              <feColorMatrix
+                type="matrix"
+                values="
+                  0.625 0.375 0 0 0
+                  0.700 0.300 0 0 0
+                  0 0.300 0.700 0 0
+                  0 0 0 1 0
+                "
+              />
+            </filter>
+
+            <filter id="tritanopia-filter">
+              <feColorMatrix
+                type="matrix"
+                values="
+                  0.950 0.050 0 0 0
+                  0 0.433 0.567 0 0
+                  0 0.475 0.525 0 0
+                  0 0 0 1 0
+                "
+              />
+            </filter>
+          </defs>
+        </svg>
         <a href="#main" className="skip-link">Lewati ke konten utama</a>
         {mobileSidebarOpen && <button className="mobile-backdrop" aria-label="Tutup menu" onClick={closeMobileSidebar} />}
         <aside className={`sidebar ${mobileSidebarOpen ? 'sidebar--mobile-open' : ''}`} aria-label="Navigasi utama">
@@ -147,9 +401,123 @@ export default function AppLayout() {
               {header.subtitle && <p>{header.subtitle}</p>}
             </div>
             <div className="topbar-actions">
-              <button className="icon-button notification-button" type="button" aria-label="Notifikasi">
+            <div className="notification-wrapper">
+              <button
+                className="icon-button notification-button"
+                type="button"
+                aria-label={`Notifikasi, ${unreadCount} belum dibaca`}
+                aria-expanded={notificationOpen}
+                onClick={() => setNotificationOpen((open) => !open)}
+              >
                 <img src={notificationIcon} alt="" />
+
+                {unreadCount > 0 && (
+                  <span className="notification-badge">
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
               </button>
+
+              {notificationOpen && (
+                <div className="notification-dropdown">
+                  <div className="notification-header">
+                  {/* button reset notifikasi dummy */}
+                  <button
+                    type="button"
+                    onClick={resetNotifications}
+                  >
+                    Reset Dummy
+                  </button>
+                    <div>
+                      <h3>Notifikasi</h3>
+                      <p>{unreadCount} belum dibaca</p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={markAllAsRead}
+                      disabled={unreadCount === 0}
+                    >
+                      Tandai semua dibaca
+                    </button>
+                  </div>
+
+                  <div className="notification-tabs">
+                    <button
+                      type="button"
+                      className={notificationFilter === 'all' ? 'active' : ''}
+                      onClick={() => setNotificationFilter('all')}
+                    >
+                      Semua
+                    </button>
+
+                    <button
+                      type="button"
+                      className={notificationFilter === 'unread' ? 'active' : ''}
+                      onClick={() => setNotificationFilter('unread')}
+                    >
+                      Belum Dibaca
+                    </button>
+                  </div>
+
+                  <div className="notification-list">
+                    {notifications.filter((notification) =>
+                      notificationFilter === 'unread'
+                        ? !notification.read
+                        : true
+                    ).length === 0 ? (
+                      <div className="notification-empty">
+                        <Icon name="bell" />
+                        <p>Tidak ada notifikasi.</p>
+                      </div>
+                    ) : (
+                      notifications
+                        .filter((notification) =>
+                          notificationFilter === 'unread'
+                            ? !notification.read
+                            : true
+                        )
+                        .map((notification) => (
+                          <div
+                            key={notification.id}
+                            className={`notification-item ${
+                              notification.read ? 'is-read' : 'is-unread'
+                            }`}
+                          >
+                            <button
+                              type="button"
+                              className="notification-content"
+                              onClick={() => markAsRead(notification.id)}
+                            >
+                              <div className="notification-item-title">
+                                <strong>{notification.title}</strong>
+                                {!notification.read && (
+                                  <span className="notification-dot" />
+                                )}
+                              </div>
+
+                              <p>{notification.message}</p>
+
+                              <small>
+                                {new Date(notification.time).toLocaleString('id-ID')}
+                              </small>
+                            </button>
+
+                            <button
+                              type="button"
+                              className="notification-delete"
+                              aria-label={`Hapus notifikasi ${notification.title}`}
+                              onClick={() => deleteNotification(notification.id)}
+                            >
+                              🗑
+                            </button>
+                          </div>
+                        ))
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
               <div className="relative" ref={accountRef}>
                 <button
                   className="profile-button"
@@ -162,13 +530,189 @@ export default function AppLayout() {
                   <img src={profileImage} alt="" />
                 </button>
                 {accountOpen && (
-                  <div className="absolute right-0 z-20 mt-2 w-56 rounded-xl bg-white p-2 shadow-lg ring-1 ring-gray-100">
-                    <div className="px-3 py-2">
-                      <p className="truncate text-xs font-medium text-gray-900">{user.nama_tampil}</p>
-                      <p className="text-[11px] text-gray-500">{ROLE_LABELS[user.role] ?? user.role}</p>
+                  <div className="account-dropdown">
+                    <div className="account-info">
+                      <p className="truncate text-xs font-medium text-gray-900">
+                        {user.nama_tampil}
+                      </p>
+                      <p className="text-[11px] text-gray-500">
+                        {ROLE_LABELS[user.role] ?? user.role}
+                      </p>
                     </div>
-                    <button type="button" onClick={handleLogout} className="flex w-full items-center gap-2 rounded-lg border-t border-gray-100 px-3 py-2 text-xs text-gray-700 hover:bg-gray-50">
-                      <Icon name="logout" className="size-4" /> Logout
+
+                    {/* Menu Aksesibilitas */}
+                    <div className="accessibility-wrapper">
+                      <div className="accessibility-trigger">
+                        <Icon name="eye" className="size-4" />
+                        <span>Aksesibilitas</span>
+                        <Icon name="chevron-right" className="accessibility-arrow" />
+                      </div>
+
+                      {/* Dropdown aksesibilitas */}
+                      <div className="accessibility-dropdown">
+                        <div className="accessibility-category">
+                          <div className="accessibility-category-trigger">
+                            <Icon name="eye" className="size-4" />
+                            <span>Buta Warna</span>
+                            <Icon name="chevron-right" className="accessibility-arrow" />
+                          </div>
+
+                          <div className="accessibility-submenu">
+                            <button
+                              type="button"
+                              onClick={() => changeColorVisionMode('protanopia')}
+                              aria-pressed={colorVisionMode === 'protanopia'}
+                            >
+                              Protanopia
+                              {colorVisionMode === 'protanopia' && ' ✓'}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => changeColorVisionMode('deuteranopia')}
+                              aria-pressed={colorVisionMode === 'deuteranopia'}
+                            >
+                              Deuteranopia
+                              {colorVisionMode === 'deuteranopia' && ' ✓'}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => changeColorVisionMode('tritanopia')}
+                              aria-pressed={colorVisionMode === 'tritanopia'}
+                            >
+                              Tritanopia
+                              {colorVisionMode === 'tritanopia' && ' ✓'}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => changeColorVisionMode('normal')}
+                              aria-pressed={colorVisionMode === 'normal'}
+                            >
+                              Normal / Reset
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="accessibility-category">
+                          <div className="accessibility-category-trigger">
+                            <Icon name="eye" className="size-4" />
+                            <span>Tunanetra</span>
+                            <Icon name="chevron-right" className="accessibility-arrow" />
+                          </div>
+
+                          <div className="accessibility-submenu">
+                            <button
+                              type="button"
+                              onClick={toggleHighContrast}
+                              aria-pressed={highContrast}
+                            >
+                              Kontras Tinggi
+                              {highContrast && ' ✓'}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={toggleLargeView}
+                              aria-pressed={largeView}
+                            >
+                              Perbesar Tampilan
+                              {largeView && ' ✓'}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                window.open(
+                                  'https://support.microsoft.com/accessibility',
+                                  '_blank',
+                                  'noopener,noreferrer'
+                                )
+                              }}
+                            >
+                              Bantuan Pembaca Layar
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="accessibility-category">
+                          <div className="accessibility-category-trigger">
+                            <Icon name="settings" className="size-4" />
+                            <span>Kesulitan Membaca</span>
+                            <Icon name="chevron-right" className="accessibility-arrow" />
+                          </div>
+
+                          <div className="accessibility-submenu">
+                          <button
+                            type="button"
+                            onClick={toggleReadableFont}
+                            aria-pressed={readableFont}
+                          >
+                            Font Mudah Dibaca {readableFont && '✓'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={toggleTextSpacing}
+                            aria-pressed={textSpacing}
+                          >
+                            Jarak Antar Teks {textSpacing && '✓'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={toggleUnderlineLinks}
+                            aria-pressed={underlineLinks}
+                          >
+                            Garis Bawah Tautan {underlineLinks && '✓'}
+                          </button>
+                          </div>
+                        </div>
+
+                        <div className="accessibility-category">
+                          <div className="accessibility-category-trigger">
+                            <Icon name="users" className="size-4" />
+                            <span>Keterbatasan Motorik</span>
+                            <Icon name="chevron-right" className="accessibility-arrow" />
+                          </div>
+
+                          <div className="accessibility-submenu">
+                          <button
+                            type="button"
+                            onClick={toggleKeyboardNavigation}
+                            aria-pressed={keyboardNavigation}
+                          >
+                            Navigasi Keyboard {keyboardNavigation && '✓'}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={toggleReduceMotion}
+                            aria-pressed={reduceMotion}
+                          >
+                            Kurangi Animasi {reduceMotion && '✓'}
+                          </button>
+                          </div>
+                        </div>
+                        <div className="accessibility-reset">
+                          <button
+                            type="button"
+                            onClick={resetAccessibility}
+                          >
+                            <Icon name="rotate-ccw" className="size-4" />
+                            Reset Semua Pengaturan
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                              
+                    {/* Logout */}
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="account-logout"
+                    >
+                      <Icon name="logout" className="size-4" />
+                      Logout
                     </button>
                   </div>
                 )}
