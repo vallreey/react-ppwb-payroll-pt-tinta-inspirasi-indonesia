@@ -653,6 +653,26 @@
   margin-top: 5px;
 }
 
+.announcement-entry--holiday {
+  margin-bottom: 9px;
+  padding: 11px 13px;
+  border: 1px solid #dbe7f8;
+  border-radius: 10px;
+  background: #f4f8fe;
+}
+
+.announcement-entry--holiday:first-child {
+  margin-top: 10px;
+}
+
+.announcement-entry--holiday .announcement-entry__category {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #e3eefc;
+  font-weight: 500;
+}
+
 .add-announcement {
   min-height: 31px;
   display: inline-flex;
@@ -1217,26 +1237,6 @@
 .account-info {
   padding: 8px 12px 12px;
   border-bottom: 1px solid #f0f1f4;
-}
-
-.account-profile-link {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 40px;
-  margin-top: 6px;
-  padding: 9px 12px;
-  border-radius: 9px;
-  color: #46536a;
-  font-size: 13px;
-  text-decoration: none;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.account-profile-link:hover,
-.account-profile-link[aria-current="page"] {
-  background: #f3f7fc;
-  color: #2175bf;
 }
 
 .accessibility-wrapper {

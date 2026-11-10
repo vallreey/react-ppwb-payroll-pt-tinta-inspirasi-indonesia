@@ -129,6 +129,7 @@ function AnnouncementPanel({ dashboard, activeTab, onTabChange, onAdd }) {
   const holidayEntries = (holidays || []).map((holiday) => ({
     id: `holiday-${holiday.date}`,
     category: 'Libur Nasional',
+    variant: 'holiday',
     title: holiday.name,
     description: 'Hari libur nasional',
     date: holiday.date,
@@ -185,7 +186,7 @@ function AnnouncementPanel({ dashboard, activeTab, onTabChange, onAdd }) {
         </div>
         <div className="announcement-results" aria-live="polite">
           {filteredEntries.length ? filteredEntries.map((entry) => (
-            <article className="announcement-entry" key={entry.id}>
+            <article className={`announcement-entry${entry.variant ? ` announcement-entry--${entry.variant}` : ''}`} key={entry.id}>
               <span className="announcement-entry__category">{entry.category}</span>
               <h3>{entry.title}</h3>
               <p>{entry.description}</p>
