@@ -11,6 +11,8 @@ import Icon from '../components/Icon.jsx'
 import { useAuth } from '../context/AuthContext'
 import { useLayoutHeader } from '../context/LayoutContext'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { useFetch } from '../hooks/useFetch'
+import { holidayService } from '../services/holidayService'
 import { formatDateWithDay, greetingNow } from '../utils/format'
 
 const statIcons = [employeeStatIcon, serviceStatIcon, jobStatIcon, divisionStatIcon]
@@ -119,7 +121,22 @@ function AttendanceCard({ attendance, employeesById, loading, onOpen }) {
 function AnnouncementPanel({ dashboard, activeTab, onTabChange, onAdd }) {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('Semua')
-  const entries = dashboard?.[activeTab] || []
+  const isAnnouncements = activeTab === 'announcements'
+  const { data: holidays, loading: holidaysLoading, error: holidaysError, reload: reloadHolidays } = useFetch(
+    (signal) => holidayService.upcoming({ signal }),
+    [],
+  )
+  const holidayEntries = (holidays || []).map((holiday) => ({
+    id: `holiday-${holiday.date}`,
+    category: 'Libur Nasional',
+    title: holiday.name,
+    description: 'Hari libur nasional',
+    date: holiday.date,
+    dateLabel: formatDateWithDay(holiday.date),
+  }))
+  const entries = isAnnouncements
+    ? [...(dashboard?.announcements || []), ...holidayEntries]
+    : dashboard?.[activeTab] || []
   const filteredEntries = entries.filter((entry) => {
     const matchesText = `${entry.title} ${entry.description}`.toLowerCase().includes(query.toLowerCase())
     return matchesText && (filter === 'Semua' || entry.category === filter)
@@ -161,6 +178,7 @@ function AnnouncementPanel({ dashboard, activeTab, onTabChange, onAdd }) {
               <option>Semua</option>
               <option>Umum</option>
               <option>Internal</option>
+              <option>Libur Nasional</option>
             </select>
             <Icon name="chevron" size={16} />
           </label>
@@ -173,8 +191,17 @@ function AnnouncementPanel({ dashboard, activeTab, onTabChange, onAdd }) {
               <p>{entry.description}</p>
               <time dateTime={entry.date}>{entry.dateLabel}</time>
             </article>
-          )) : (
+          )) : !(isAnnouncements && (holidaysLoading || holidaysError)) && (
             <p className="empty-state">There is no {activeTab === 'announcements' ? 'announcement' : activeTab === 'submissions' ? 'submission' : 'task'}<br />at this time</p>
+          )}
+          {isAnnouncements && holidaysLoading && (
+            <p className="empty-state" role="status">Memuat hari libur nasional...</p>
+          )}
+          {isAnnouncements && holidaysError && (
+            <p className="empty-state" role="alert">
+              {holidaysError.message}{' '}
+              <button type="button" className="font-medium text-blue-600 hover:underline" onClick={reloadHolidays}>Coba lagi</button>
+            </p>
           )}
         </div>
         {activeTab === 'announcements' && (
