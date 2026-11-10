@@ -1,6 +1,6 @@
 # Payroll PT Tinta Inspirasi Indonesia
 
-Aplikasi web pengelolaan payroll dan operasional karyawan PT Tinta Inspirasi Indonesia. Aplikasi dibuat sebagai proyek Tugas Besar I mata kuliah Perancangan dan Pemrograman Web, dengan fokus pada antarmuka responsif, aksesibilitas, navigasi antarhalaman, dan pengambilan data melalui Mock API.
+Aplikasi web pengelolaan payroll dan operasional karyawan PT Tinta Inspirasi Indonesia. Aplikasi dibuat sebagai proyek Tugas Besar I mata kuliah Perancangan dan Pemrograman Web, dengan fokus pada antarmuka responsif, aksesibilitas, navigasi antarhalaman, dan pengambilan data melalui Mock API dan API opensource external.
 
 ## Tautan Proyek
 
