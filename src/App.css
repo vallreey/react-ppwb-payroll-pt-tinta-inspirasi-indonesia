@@ -1219,6 +1219,26 @@
   border-bottom: 1px solid #f0f1f4;
 }
 
+.account-profile-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  margin-top: 6px;
+  padding: 9px 12px;
+  border-radius: 9px;
+  color: #46536a;
+  font-size: 13px;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.account-profile-link:hover,
+.account-profile-link[aria-current="page"] {
+  background: #f3f7fc;
+  color: #2175bf;
+}
+
 .accessibility-wrapper {
   position: relative;
   margin-top: 5px;
