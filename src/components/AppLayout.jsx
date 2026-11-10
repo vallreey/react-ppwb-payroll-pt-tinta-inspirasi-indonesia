@@ -47,6 +47,9 @@ export default function AppLayout() {
   const [largeView, setLargeView] = useState(() => {
     return localStorage.getItem('accessibility-large-view') === 'true'
   })
+  const [readableFont, setReadableFont] = useState(false)
+  const [textSpacing, setTextSpacing] = useState(false)
+  const [underlineLinks, setUnderlineLinks] = useState(false)
   const accountRef = useRef(null)
 
   useEffect(() => {
@@ -98,6 +101,24 @@ export default function AppLayout() {
     localStorage.setItem('accessibility-large-view', String(newValue))
   }
 
+  function toggleReadableFont() {
+    const value = !readableFont
+    setReadableFont(value)
+    localStorage.setItem('accessibility-readable-font', String(value))
+  }
+  
+  function toggleTextSpacing() {
+    const value = !textSpacing
+    setTextSpacing(value)
+    localStorage.setItem('accessibility-text-spacing', String(value))
+  }
+  
+  function toggleUnderlineLinks() {
+    const value = !underlineLinks
+    setUnderlineLinks(value)
+    localStorage.setItem('accessibility-underline-links', String(value))
+  }
+
   function closeMobileSidebar() {
     setMobileSidebarOpen(false)
   }
@@ -116,6 +137,9 @@ export default function AppLayout() {
         data-color-vision={colorVisionMode}
         data-high-contrast={highContrast}
         data-large-view={largeView}
+        data-readable-font={readableFont}
+        data-text-spacing={textSpacing}
+        data-underline-links={underlineLinks}
       >
         <svg
           aria-hidden="true"
@@ -353,9 +377,27 @@ export default function AppLayout() {
                           </div>
 
                           <div className="accessibility-submenu">
-                            <div>Font Mudah Dibaca</div>
-                            <div>Jarak Antar Teks</div>
-                            <div>Garis Bawah Tautan</div>
+                          <button
+                            type="button"
+                            onClick={toggleReadableFont}
+                            aria-pressed={readableFont}
+                          >
+                            Font Mudah Dibaca {readableFont && '✓'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={toggleTextSpacing}
+                            aria-pressed={textSpacing}
+                          >
+                            Jarak Antar Teks {textSpacing && '✓'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={toggleUnderlineLinks}
+                            aria-pressed={underlineLinks}
+                          >
+                            Garis Bawah Tautan {underlineLinks && '✓'}
+                          </button>
                           </div>
                         </div>
 

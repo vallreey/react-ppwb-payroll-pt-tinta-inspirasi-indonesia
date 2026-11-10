@@ -1381,3 +1381,17 @@
   outline: 2px solid #2175bf;
   outline-offset: 2px;
 }
+
+.app-shell[data-readable-font="true"] {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.app-shell[data-text-spacing="true"] {
+  letter-spacing: 0.08em;
+  line-height: 1.8;
+}
+
+.app-shell[data-underline-links="true"] a {
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+}
