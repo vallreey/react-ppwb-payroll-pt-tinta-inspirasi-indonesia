@@ -23,10 +23,12 @@ const navigation = [
   { label: 'Absensi', icon: attendanceIcon, to: '/absensi', match: ['/absensi'] },
   { label: 'Karyawan', icon: attendanceIcon, to: '/karyawan', match: ['/karyawan'], roles: MANAGERS },
   { label: 'Penggajian', icon: payrollIcon },
-  { label: 'Izin & Cuti', icon: leaveIcon },
+  { label: 'Izin & Cuti', icon: leaveIcon, to: '/izin-cuti',match: ['/izin-cuti'], roles: ['super_admin', 'hrd'], },
+  { label: 'Pengajuan Izin & Cuti', icon: leaveIcon, to: '/pengajuan-izin-cuti', match: ['/pengajuan-izin-cuti'], roles: ['karyawan', 'supervisor', 'hrd'],},
   { label: 'Tracking Lokasi', icon: trackingIcon, to: '/tracking-lokasi', match: ['/tracking-lokasi'] },
   { label: 'Manajemen Pengguna', icon: managementIcon, to: '/pengguna', match: ['/pengguna', '/persetujuan-akun'], roles: ['super_admin'] },
   { label: 'Settings', icon: settingsIcon, to: '/pengaturan', match: ['/pengaturan'], roles: ['super_admin'] },
+  
 ]
 
 export default function AppLayout() {
