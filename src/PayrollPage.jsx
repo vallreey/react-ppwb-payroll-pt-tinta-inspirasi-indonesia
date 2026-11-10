@@ -312,7 +312,6 @@ function PayrollPage() {
                 <section className="payroll-panel payroll-own-card" aria-labelledby="payroll-own-title">
                   <header className="payroll-side-heading">
                     <h2 id="payroll-own-title">Gaji Saya</h2>
-                    <a href="#payroll-history">Riwayat Gaji</a>
                   </header>
                   <div className="payroll-own-summary">
                     <div>
